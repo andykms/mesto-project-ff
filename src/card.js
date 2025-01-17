@@ -1,5 +1,8 @@
 import { initialCards } from './cards';
 import { cardList, addCard } from './index';
+import { openModal } from './modal';
+import { popupImage } from './index';
+
 
 export function createCardsList() {
   initialCards.forEach(function(item) {
@@ -19,6 +22,7 @@ export function createCard(name, link, deleteCard) {
 
   const deleteButton = newCard.querySelector('.card__delete-button');
   deleteButton.addEventListener('click', deleteCard);
+  newCard.addEventListener('click',(evt)=> openModal(evt, popupImage));
   return newCard;
 }
 
