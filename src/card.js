@@ -1,6 +1,6 @@
 import { initialCards } from './cards';
-import { cardList, addCard, popupImage, modalImage, openModal } from './index';
-
+import { cardList, addCard, popupImage, modalImage } from './index';
+import { openModal } from './modal';
 
 export function createCardsList() {
   initialCards.forEach(function(item) {

@@ -1,5 +1,5 @@
 import {createCardsList, createCard, deleteCard, addNewCard, likeOrUnlikeCard} from './card';
-import {addClassesOpen, addListenersOpen, closeModal, clearInputs} from './modal';
+import {openModal, closeModal} from './modal';
 
 import './pages/index.css';
 
@@ -40,8 +40,8 @@ const profileDescription = content.querySelector(".profile__description");
 createCardsList();
 
 //Добавляем кнопкам на странице (редактирования профиля и добавления карточки) проверку на нажатие
-buttonEditProfile.addEventListener('click', (evt) => openModal(evt, popupEdit, true));
-buttonAddCard.addEventListener('click', (evt) => openModal(evt, popupNewCard, true));
+buttonEditProfile.addEventListener('click', (evt) => openForm(evt, popupEdit, formEdit));
+buttonAddCard.addEventListener('click', (evt) => openForm(evt, popupNewCard, formAddCard));
 
 //Поля формы редактирования профиля
 const formEdit = document.forms.edit_profile;
@@ -77,11 +77,6 @@ function renameProfile(newName, newDescription) {
   profileDescription.textContent = newDescription;
 }
 
-export function openModal(evt,modalWindow, withInputs = false) {
-  addClassesOpen(modalWindow);
-  addListenersOpen(modalWindow, withInputs);
-}
-
 function closeForm(popup, form) {
   form.reset();
   closeModal(popup);
@@ -91,3 +86,28 @@ function closeForm(popup, form) {
 function addAnimationClass(popup){
   popup.classList.add("popup_is-animated");
 }
+
+function openForm(evt, popup, form) {
+  openModal(evt, popup);
+  popup.addEventListener('click', (evt)=>{
+    if(evt.target.classList.contains("popup") ||
+       evt.target.classList.contains("popup__close")){
+      clearInputs(popup);
+    };
+  });
+  document.addEventListener('keyup', checkCloseModalWithForm);
+}
+
+function checkCloseModalWithForm(evt) {
+  if(evt.key === "Escape") {
+    const popup = document.querySelector(".popup_is-opened");
+    clearInputs(popup);
+    document.removeEventListener('keyup', checkCloseModalWithForm);
+  }
+}
+
+function clearInputs(modalWindow) {
+  const inputs = modalWindow.querySelectorAll(".popup__input");
+  inputs.forEach((input) => input.value = '');
+}
+
