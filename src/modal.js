@@ -17,11 +17,11 @@ function checkClose(evt) {
 }
 
 export function closeModal() {
-  document.querySelectorAll(".popup").forEach((item)=>{
-    if(item.classList.contains("popup_is-opened")){
-      item.classList.remove("popup_is-opened");
-      removeListeners(item);
-      clearInputs(item);
+  document.querySelectorAll(".popup").forEach((modalWindow)=>{
+    if(modalWindow.classList.contains("popup_is-opened")){
+      modalWindow.classList.remove("popup_is-opened");
+      removeListeners(modalWindow);
+      clearInputs(modalWindow);
     }
   });
 }
@@ -34,12 +34,12 @@ function addImageModal(evt, modalWindow) {
   modalCaption.textContent = evt.target.alt;
 }
 
-function removeListeners(item) {
-  item.removeEventListener('click', closeModal);
+function removeListeners(modalWindow) {
+  modalWindow.removeEventListener('click', closeModal);
   document.removeEventListener('keyup', closeModal);
 }
 
-function clearInputs(item) {
-  const inputs = item.querySelectorAll(".popup__input");
+function clearInputs(modalWindow) {
+  const inputs = modalWindow.querySelectorAll(".popup__input");
   inputs.forEach((input) => input.value = '');
 }

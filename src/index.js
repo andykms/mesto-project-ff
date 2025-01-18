@@ -1,4 +1,4 @@
-import {createCardsList, createCard, deleteCard} from './card';
+import {createCardsList, createCard, deleteCard, addNewCard} from './card';
 import {openModal, closeModal} from './modal';
 
 import './pages/index.css';
@@ -63,7 +63,8 @@ formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  createCard(newCardPlace, newCardLink, deleteCard);
+  const newCard = createCard(newCardPlace, newCardLink, deleteCard);
+  addNewCard(newCard, 0);
   formAddCard.reset();
   closeModal();
 });
@@ -72,5 +73,6 @@ function renameProfile(newName, newDescription) {
   profileTitle.textContent = newName;
   profileDescription.textContent = newDescription;
 }
+
 
 
