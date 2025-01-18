@@ -1,4 +1,4 @@
-import {createCardsList, createCard, deleteCard, addNewCard} from './card';
+import {createCardsList, createCard, deleteCard, addNewCard, likeOrUnlikeCard} from './card';
 import {openModal, closeModal} from './modal';
 
 import './pages/index.css';
@@ -59,11 +59,12 @@ formEdit.addEventListener('submit',(evt) => {
   closeModal();
 });
 
+//Добавляем форме добавления карточки слушатель события на подтверждение ввода
 formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  const newCard = createCard(newCardPlace, newCardLink, deleteCard);
+  const newCard = createCard(newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard);
   addNewCard(newCard, 0);
   formAddCard.reset();
   closeModal();

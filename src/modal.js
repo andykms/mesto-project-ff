@@ -1,8 +1,6 @@
 export function openModal(evt,modalWindow) {
-  modalWindow.classList.add("popup_is-opened");
-  document.addEventListener('keyup', checkClose);
-  modalWindow.addEventListener('click', checkClose);
-  
+  addClassesOpen(modalWindow);
+  addListenersOpen(modalWindow);
   if (evt.target.classList.contains("card__image")) {
     addImageModal(evt, modalWindow);
   }
@@ -19,7 +17,7 @@ function checkClose(evt) {
 export function closeModal() {
   document.querySelectorAll(".popup").forEach((modalWindow)=>{
     if(modalWindow.classList.contains("popup_is-opened")){
-      modalWindow.classList.remove("popup_is-opened");
+      removeClassesClose(modalWindow);
       removeListeners(modalWindow);
       clearInputs(modalWindow);
     }
@@ -43,3 +41,19 @@ function clearInputs(modalWindow) {
   const inputs = modalWindow.querySelectorAll(".popup__input");
   inputs.forEach((input) => input.value = '');
 }
+
+function addListenersOpen(modalWindow) {
+  document.addEventListener('keyup', checkClose);
+  modalWindow.addEventListener('click', checkClose);
+}
+
+function addClassesOpen(modalWindow) {
+  modalWindow.classList.add("popup_is-animated");
+  modalWindow.classList.add("popup_is-opened");
+}
+
+function removeClassesClose(modalWindow) {
+  modalWindow.classList.remove("popup_is-opened");
+  modalWindow.classList.remove("popup-is-animated");
+}
+
