@@ -32,14 +32,14 @@ function addImageModal(evt, modalWindow) {
   modalCaption.textContent = evt.target.alt;
 }
 
-function removeListeners(modalWindow) {
-  modalWindow.removeEventListener('click', closeModal);
-  document.removeEventListener('keyup', closeModal);
-}
-
 function clearInputs(modalWindow) {
   const inputs = modalWindow.querySelectorAll(".popup__input");
   inputs.forEach((input) => input.value = '');
+}
+
+function addClassesOpen(modalWindow) {
+  modalWindow.classList.add("popup_is-animated");
+  modalWindow.classList.add("popup_is-opened");
 }
 
 function addListenersOpen(modalWindow) {
@@ -47,9 +47,9 @@ function addListenersOpen(modalWindow) {
   modalWindow.addEventListener('click', checkClose);
 }
 
-function addClassesOpen(modalWindow) {
-  modalWindow.classList.add("popup_is-animated");
-  modalWindow.classList.add("popup_is-opened");
+function removeListeners(modalWindow) {
+  modalWindow.removeEventListener('click', closeModal);
+  document.removeEventListener('keyup', closeModal);
 }
 
 function removeClassesClose(modalWindow) {
