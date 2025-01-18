@@ -1,5 +1,5 @@
 import {createCardsList, createCard, deleteCard, addNewCard, likeOrUnlikeCard} from './card';
-import {openModal, closeModal} from './modal';
+import {addClassesOpen, addListenersOpen, closeModal, clearInputs} from './modal';
 
 import './pages/index.css';
 
@@ -13,12 +13,15 @@ export const addCard = document.querySelector('#card-template').content;
 
 //Попап для редактирования профиля
 const popupEdit = document.querySelector('.popup_type_edit');
-
+addAnimationClass(popupEdit);
 //Попап для добавления карточки 
 const popupNewCard = document.querySelector('.popup_type_new-card');
-
+addAnimationClass(popupNewCard);
 //Экспортируем попап Изображения в card.js чтобы добавлять его в функцию addEventListener
 export const popupImage = document.querySelector('.popup_type_image');
+addAnimationClass(popupImage);
+
+export const modalImage = popupImage.querySelector(".popup__image");
 
 //Кнопка для изменения профиля
 const buttonEditProfile = content.querySelector(".profile__edit-button");
@@ -32,12 +35,13 @@ const profileTitle = content.querySelector(".profile__title");
 //Описание профиля
 const profileDescription = content.querySelector(".profile__description");
 
+
 //Функция из card.js, чтобы добавить карточки из объекта cards.js
 createCardsList();
 
 //Добавляем кнопкам на странице (редактирования профиля и добавления карточки) проверку на нажатие
-buttonEditProfile.addEventListener('click', (evt) => openModal(evt, popupEdit));
-buttonAddCard.addEventListener('click', (evt) => openModal(evt, popupNewCard));
+buttonEditProfile.addEventListener('click', (evt) => openModal(evt, popupEdit, true));
+buttonAddCard.addEventListener('click', (evt) => openModal(evt, popupNewCard, true));
 
 //Поля формы редактирования профиля
 const formEdit = document.forms.edit_profile;
@@ -55,8 +59,7 @@ formEdit.addEventListener('submit',(evt) => {
   const newName = nameInput.value;
   const newDescription = jobInput.value;
   renameProfile(newName, newDescription);
-  formEdit.reset();
-  closeModal();
+  closeForm(popupEdit, formEdit);
 });
 
 //Добавляем форме добавления карточки слушатель события на подтверждение ввода
@@ -66,8 +69,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCardLink = linkInput.value;
   const newCard = createCard(newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard);
   addNewCard(newCard, 0);
-  formAddCard.reset();
-  closeModal();
+  closeForm(popupNewCard, formAddCard);
 });
 
 function renameProfile(newName, newDescription) {
@@ -75,5 +77,17 @@ function renameProfile(newName, newDescription) {
   profileDescription.textContent = newDescription;
 }
 
+export function openModal(evt,modalWindow, withInputs = false) {
+  addClassesOpen(modalWindow);
+  addListenersOpen(modalWindow, withInputs);
+}
 
+function closeForm(popup, form) {
+  form.reset();
+  closeModal(popup);
+  clearInputs(popup);
+}
 
+function addAnimationClass(popup){
+  popup.classList.add("popup_is-animated");
+}
