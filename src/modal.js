@@ -28,7 +28,7 @@ export function addListenersOpen(modalWindow) {
   modalWindow.addEventListener('click', (evt)=> checkClose(evt, modalWindow));
 }
 
-function removeListeners() {
+export function removeListeners() {
   document.removeEventListener('keyup', checkClose);
 }
 

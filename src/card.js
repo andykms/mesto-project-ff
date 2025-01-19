@@ -1,12 +1,5 @@
-import { initialCards } from './cards';
 import { cardList, addCard, popupImage, modalImage } from './index';
 import { openModal } from './modal';
-
-export function createCardsList() {
-  initialCards.forEach(function(item) {
-    addNewCard(createCard(item['name'], item['link'], deleteCard, likeOrUnlikeCard), -1);
-  });
-}
 
 export function createCard(name, link, deleteCard, likeOrUnlikeCard) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
