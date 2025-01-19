@@ -65,7 +65,6 @@ function renameProfile(newName, newDescription) {
 function closeForm(popup, form) {
   form.reset();
   closeModal(popup);
-  clearInputs(popup);
 }
 
 function addAnimationClass(popup){
@@ -73,7 +72,6 @@ function addAnimationClass(popup){
 }
 
 function openForm(evt, popup) {
-  openModal(evt, popup);
   popup.addEventListener('click', (evt)=>{
     if(evt.target.classList.contains("popup") ||
        evt.target.classList.contains("popup__close")){
@@ -81,13 +79,14 @@ function openForm(evt, popup) {
     };
   });
   document.addEventListener('keyup', checkCloseEscapeForm);
+  openModal(evt, popup);
 }
 
 function checkCloseEscapeForm(evt) {
   if(evt.key === "Escape") {
     const popup = document.querySelector(".popup_is-opened");
     clearInputs(popup);
-    document.removeEventListener('keyup', checkCloseEscapeForm);
+    document.removeEventListener('keyup', checkCloseEscapeForm)
   }
 }
 
