@@ -65,6 +65,7 @@ function renameProfile(newName, newDescription) {
 function closeForm(popup, form) {
   form.reset();
   closeModal(popup);
+  document.removeEventListener('keyup', checkCloseEscapeForm);
 }
 
 function addAnimationClass(popup){
