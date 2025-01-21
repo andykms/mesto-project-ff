@@ -1,13 +1,12 @@
-import { cardList, addCard, popupImage, modalImage } from './index';
-import { openModal } from './modal';
+import { cardList, addCard } from './index';
 
-export function createCard(name, link, deleteCard, likeOrUnlikeCard) {
+export function createCard(name, link, deleteCard, likeOrUnlikeCard, openImageModal) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
 
   const cardImg = newCard.querySelector('.card__image');
   cardImg.src = link;
   cardImg.alt = name;
-  cardImg.addEventListener('click',(evt)=> openImageModal(evt, popupImage));
+  cardImg.addEventListener('click',openImageModal);
 
   const cardTitle = newCard.querySelector('.card__title');
   cardTitle.textContent = name;
@@ -41,10 +40,3 @@ export function likeOrUnlikeCard(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
-function openImageModal(evt, modalWindow) {
-  modalImage.src = evt.target.src;
-  modalImage.alt = evt.target.alt;
-  const modalCaption = modalWindow.querySelector(".popup__caption");
-  modalCaption.textContent = evt.target.alt;
-  openModal(evt, modalWindow);
-}

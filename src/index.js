@@ -1,5 +1,5 @@
 import { createCard, deleteCard, addNewCard, likeOrUnlikeCard} from './card';
-import {openModal, closeModal, removeListeners} from './modal';
+import { closeModal, addClassesOpen, addListenersOpen } from './modal';
 import { initialCards } from './cards';
 
 import './pages/index.css';
@@ -13,8 +13,8 @@ const popupEdit = document.querySelector('.popup_type_edit');
 addAnimationClass(popupEdit);
 const popupNewCard = document.querySelector('.popup_type_new-card');
 addAnimationClass(popupNewCard);
-export const popupImage = document.querySelector('.popup_type_image');
-export const modalImage = popupImage.querySelector(".popup__image");
+const popupImage = document.querySelector('.popup_type_image');
+const modalImage = popupImage.querySelector(".popup__image");
 addAnimationClass(popupImage);
 
 
@@ -52,7 +52,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  const newCard = createCard(newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard);
+  const newCard = createCard(newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard, openImageModal);
   addNewCard(newCard, 0);
   closeForm(popupNewCard, formAddCard);
 });
@@ -76,6 +76,7 @@ function openForm(evt, popup) {
     if(evt.target.classList.contains("popup") ||
        evt.target.classList.contains("popup__close")){
       clearInputs(popup);
+      document.removeEventListener('keyup', checkCloseEscapeForm);
     };
   });
   document.addEventListener('keyup', checkCloseEscapeForm);
@@ -86,7 +87,7 @@ function checkCloseEscapeForm(evt) {
   if(evt.key === "Escape") {
     const popup = document.querySelector(".popup_is-opened");
     clearInputs(popup);
-    document.removeEventListener('keyup', checkCloseEscapeForm)
+    document.removeEventListener('keyup', checkCloseEscapeForm);
   }
 }
 
@@ -97,6 +98,19 @@ function clearInputs(modalWindow) {
 
 function createCardsList() {
   initialCards.forEach(function(item) {
-    addNewCard(createCard(item['name'], item['link'], deleteCard, likeOrUnlikeCard), -1);
+    addNewCard(createCard(item['name'], item['link'], deleteCard, likeOrUnlikeCard, openImageModal), -1);
   });
+}
+
+function openModal(evt,modalWindow) {
+  addClassesOpen(modalWindow);
+  addListenersOpen(modalWindow);
+}
+
+function openImageModal(evt) {
+  modalImage.src = evt.target.src;
+  modalImage.alt = evt.target.alt;
+  const modalCaption = popupImage.querySelector(".popup__caption");
+  modalCaption.textContent = evt.target.alt;
+  openModal(evt, popupImage);
 }

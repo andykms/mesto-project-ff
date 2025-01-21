@@ -1,8 +1,3 @@
-export function openModal(evt,modalWindow) {
-  addClassesOpen(modalWindow);
-  addListenersOpen(modalWindow);
-}
-
 function checkClose(evt, modalWindow = undefined) {
   if(evt.key === 'Escape') {
     modalWindow = document.querySelector(".popup_is-opened")
