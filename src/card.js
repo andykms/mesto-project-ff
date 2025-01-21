@@ -26,16 +26,6 @@ export function deleteCard(event) {
   listItem.remove();
 }
 
-export function addNewCard(newCard, index) {
-  switch (index){
-    case 0:
-      cardList.prepend(newCard);
-      break;
-    default:
-      cardList.append(newCard);
-  }
-}
-
 export function likeOrUnlikeCard(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }

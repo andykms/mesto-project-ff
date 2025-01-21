@@ -1,4 +1,4 @@
-import { createCard, deleteCard, addNewCard, likeOrUnlikeCard} from './card';
+import { createCard, deleteCard, likeOrUnlikeCard} from './card';
 import { closeModal, addClassesOpen, addListenersOpen } from './modal';
 import { initialCards } from './cards';
 
@@ -114,4 +114,14 @@ function openImageModal(evt) {
   const modalCaption = popupImage.querySelector(".popup__caption");
   modalCaption.textContent = evt.target.alt;
   openModal(evt, popupImage);
+}
+
+function addNewCard(newCard, index) {
+  switch (index){
+    case 0:
+      cardList.prepend(newCard);
+      break;
+    default:
+      cardList.append(newCard);
+  }
 }
