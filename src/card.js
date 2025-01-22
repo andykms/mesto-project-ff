@@ -1,6 +1,4 @@
-import {  addCard } from './index';
-
-export function createCard(name, link, deleteCard, likeOrUnlikeCard, openImageModal) {
+export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, openImageModal) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
 
   const cardImg = newCard.querySelector('.card__image');

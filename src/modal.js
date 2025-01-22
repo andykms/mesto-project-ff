@@ -1,17 +1,29 @@
 function checkClose(evt, modalWindow = undefined) {
-  if(evt.key === 'Escape') {
-    modalWindow = document.querySelector(".popup_is-opened")
-    closeModal(modalWindow);
+  if(evt.key === 'Escape' && !modalWindow) {
+    modalWindow = document.querySelector(".popup_is-opened");
+    checkForForm(modalWindow);
   }
   else if (evt.target.classList.contains("popup") ||
       evt.target.classList.contains("popup__close")) {
-        closeModal(modalWindow);
+        checkForForm(modalWindow);
   }
 }
 
-export function closeModal(modalWindow) {
+function checkForForm(modalWindow) {
+  if(modalWindow.querySelector(".popup__form")) {
+    closeModal(modalWindow, true);
+  }
+  else {
+    closeModal(modalWindow);
+  };
+}
+
+export function closeModal(modalWindow, closeForm = false) {
   removeClassesClose(modalWindow);
   removeListeners();
+  if(closeForm) {
+    clearInputs(modalWindow);
+  }
 }
 
 export function addClassesOpen(modalWindow) {
@@ -29,4 +41,9 @@ export function removeListeners() {
 
 function removeClassesClose(modalWindow) {
   modalWindow.classList.remove("popup_is-opened");
+}
+
+function clearInputs(modalWindow) {
+  const inputs = modalWindow.querySelectorAll(".popup__input");
+  inputs.forEach((input) => input.value = '');
 }
