@@ -46,7 +46,8 @@ formEdit.addEventListener('submit',(evt) => {
   const newName = nameInput.value;
   const newDescription = jobInput.value;
   renameProfile(newName, newDescription);
-  closeModal(popupEdit, true);
+  formEdit.reset();
+  closeModal(popupEdit);
 });
 
 formAddCard.addEventListener('submit', (evt)=> {
@@ -55,7 +56,8 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCardLink = linkInput.value;
   const newCard = createCard(addCard, newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard, openImageModal);
   addNewCard(newCard, 0);
-  closeModal(popupNewCard, true);
+  formAddCard.reset();
+  closeModal(popupNewCard);
 });
 
 function renameProfile(newName, newDescription) {
@@ -68,12 +70,14 @@ function addAnimationClass(popup){
 }
 
 function openFormEdit(evt) {
+  formEdit.reset();
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
   openModal(evt, popupEdit);
 }
 
 function openFormAddCard(evt) {
+  formAddCard.reset();
   openModal(evt, popupNewCard);
 }
 
