@@ -25,3 +25,14 @@
     line-height: 17px;
   }
 }
+
+.button_inactive {
+  background: #fff;
+  color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.button_inactive:hover {
+  background: inherit;
+  cursor: initial;
+}

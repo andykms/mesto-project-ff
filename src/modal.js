@@ -32,4 +32,5 @@ export function removeListeners() {
 
 function removeClassesClose(modalWindow) {
   modalWindow.classList.remove("popup_is-opened");
+  
 }
