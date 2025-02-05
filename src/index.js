@@ -27,7 +27,7 @@ const profileTitle = content.querySelector(".profile__title");
 
 const profileDescription = content.querySelector(".profile__description");
 
-const patternErrorMessage = 'Оба поля могут содержать только латинские и кириллические буквы, знаки дефиса и пробелы.';
+const patternErrorMessage = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы";
 
 createCardsList();
 
@@ -60,6 +60,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCard = createCard(addCard, newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard, openImageModal);
   addNewCard(newCard, 0);
   formAddCard.reset();
+  buttonFormAddCard.classList.add('button_inactive');
   closeModal(popupNewCard);
 });
 

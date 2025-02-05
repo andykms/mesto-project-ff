@@ -50,7 +50,7 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="new_place">
-        <input type="text" name="place_name" class="popup__input popup__input_type_card-name" id = "card-name_input" placeholder="Название" required>
+        <input type="text" name="place_name" class="popup__input popup__input_type_card-name" id = "card-name_input" placeholder="Название" required minlength="2" maxlength="30" pattern="[а-яёА-ЯЁa-zA-Z\s\-]+">
         <span class = "popup__input-error card-name_input-error"></span>
         <input type="url" name="link" class="popup__input popup__input_type_url" id = "url_input" placeholder="Ссылка на картинку" required>
         <span class = "popup__input-error url_input-error"></span>
