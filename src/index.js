@@ -34,15 +34,26 @@ createCardsList();
 buttonEditProfile.addEventListener('click', openFormEdit);
 buttonAddCard.addEventListener('click', openFormAddCard);
 
+
+const selectorNames = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'button_inactive',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
+
 const formEdit = document.forms.edit_profile;
 const nameInput  = formEdit.elements.name;
 const jobInput = formEdit.elements.description;
-const buttonFormEdit = formEdit.querySelector('.popup__button');
+const buttonFormEdit = formEdit.querySelector(selectorNames.submitButtonSelector);
 
 const formAddCard = document.forms.new_place;
 const placeInput = formAddCard.elements.place_name;
 const linkInput = formAddCard.elements.link;
-const buttonFormAddCard = formAddCard.querySelector('.popup__button');
+const buttonFormAddCard = formAddCard.querySelector(selectorNames.submitButtonSelector);
+
 
 formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
@@ -60,7 +71,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCard = createCard(addCard, newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard, openImageModal);
   addNewCard(newCard, 0);
   formAddCard.reset();
-  buttonFormAddCard.classList.add('button_inactive');
+  buttonFormAddCard.classList.add(selectorNames.inactiveButtonClass);
   closeModal(popupNewCard);
 });
 
@@ -77,8 +88,8 @@ function openFormEdit(evt) {
   formEdit.reset();
   checkErrorClassesInput(formEdit, nameInput);
   checkErrorClassesInput(formEdit, jobInput);
-  if(buttonFormEdit.classList.contains('button_inactive')) {
-    buttonFormEdit.classList.remove('button_inactive');
+  if(buttonFormEdit.classList.contains(selectorNames.inactiveButtonClass)) {
+    buttonFormEdit.classList.remove(selectorNames.inactiveButtonClass);
   }
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
@@ -90,7 +101,7 @@ function openFormAddCard(evt) {
 }
 
 function checkErrorClassesInput(formElement, inputElement) {
-  if (inputElement.classList.contains("popup__input_type_error")) {
+  if (inputElement.classList.contains(selectorNames.inputErrorClass)) {
     hideInputError(formElement, inputElement);
   }
 }
@@ -123,44 +134,44 @@ function addNewCard(newCard, index) {
   }
 }
 
-enableValidation();
+enableValidation(selectorNames);
 
-function enableValidation() {
-  const formList = Array.from(document.querySelectorAll('.popup__form'));
+function enableValidation(selectorNames) {
+  const formList = Array.from(document.querySelectorAll(selectorNames.formSelector));
   formList.forEach((formElement) => {
-    setEventListeners(formElement);
+    setEventListeners(formElement, selectorNames);
   });
 };
 
-function setEventListeners(formElement) {
-  const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-  const buttonElement = formElement.querySelector(".popup__button");
+function setEventListeners(formElement, selectorNames) {
+  const inputList = Array.from(formElement.querySelectorAll(selectorNames.inputSelector));
+  const buttonElement = formElement.querySelector(selectorNames.submitButtonSelector);
   
   toggleButtonState(inputList, buttonElement);
 
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', function () {
-      checkInputValidity(formElement, inputElement);
-      toggleButtonState(inputList, buttonElement);
+      checkInputValidity(formElement, inputElement, selectorNames.inputErrorClass);
+      toggleButtonState(inputList, buttonElement, selectorNames.inactiveButtonClass);
     });
   });
 };
 
-function toggleButtonState(inputList, buttonElement) {
+function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
   if(hasInvalidInput(inputList)) {
-    buttonElement.classList.add("button_inactive");
+    buttonElement.classList.add(inactiveButtonClass);
   } else {
-    buttonElement.classList.remove("button_inactive");
+    buttonElement.classList.remove(inactiveButtonClass);
   }
 }
 
-function checkInputValidity(formElement, inputElement) {
+function checkInputValidity(formElement, inputElement, inputErrorClass) {
   if (inputElement.validity.patternMismatch) {
-    showInputError(formElement, inputElement, patternErrorMessage);
+    showInputError(formElement, inputElement, patternErrorMessage, inputErrorClass);
   } else if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
+    showInputError(formElement, inputElement, inputElement.validationMessage, inputErrorClass);
   } else {
-    hideInputError(formElement, inputElement);
+    hideInputError(formElement, inputElement, inputErrorClass);
   }
 };
 
@@ -170,15 +181,15 @@ function hasInvalidInput(inputList) {
   });
 }
 
-function showInputError(formElement, inputElement, errorMessage) {
+function showInputError(formElement, inputElement, errorMessage, inputErrorClass) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.add('popup__input_type_error');
+  inputElement.classList.add(inputErrorClass);
   errorElement.textContent = errorMessage;
 };
 
-function hideInputError(formElement, inputElement) {
+function hideInputError(formElement, inputElement, inputErrorClass) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove('popup__input_type_error');
+  inputElement.classList.remove(inputErrorClass);
   errorElement.textContent = '';
 };
 
