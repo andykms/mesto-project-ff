@@ -1,3 +1,9 @@
+.popup__input-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 .popup__input {
   width: 100%;
   height: 47px;
@@ -8,6 +14,7 @@
   box-sizing: border-box;
   padding: 10px 0 0;
   margin-bottom: 5px;
+  position: relative;
 }
 
 .popup__input:last-of-type {
@@ -22,9 +29,10 @@
 }
 
 .popup__input-error {
-  position: relative;
-  inset-block-start: 5px;
+  padding-block-start: 5px;
+  block-size: 12px;
   z-index: 15;
+  inset-inline-start: 0;
   font-size: 12px;
   font-weight: 400;
   line-height: 14.52px;
