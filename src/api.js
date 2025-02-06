@@ -64,3 +64,18 @@ export function postCard(name, link){
     return Promise.reject(res.status);
   })
 }
+
+export function deleteCardFromServer(_id){
+  return fetch(`https://nomoreparties.co/v1/wff-cohort-31/cards/${_id}`, {
+    method: 'DELETE',
+    headers: {
+      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
+    },
+  }) 
+    .then((res)=>{
+      if(res.ok){
+        return;
+      }
+      return Promise.reject(res.status);
+    })
+}

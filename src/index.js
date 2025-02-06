@@ -37,26 +37,27 @@ function insertServerUserInfo(userInfoJson) {
     profileImage.style.backgroundImage = `url(${userInfoJson.avatar})`;
 }
 
-function insertServerCards(cards) {
-  console.log(cards);
+function insertServerCards(cards, myUserId) {
   cards.forEach((card)=>{
-       addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal));
-      });
+      let itsMyCard = false;
+      if(card.owner._id == myUserId) {
+        itsMyCard = true;
+      }
+      addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal, itsMyCard, card.likes, card._id));
+    });
 }
 
 Promise.all([getUserInfo(), getCards()])
   .then((results) => {
     insertServerUserInfo(results[0]);
-    insertServerCards(results[1]);
+    insertServerCards(results[1], results[0]._id);
   })
   .catch((err)=>{
     console.log(`К сожалению, не смогли получить профиль: ошибка ${err}`);
   })
 
-
 buttonEditProfile.addEventListener('click', openFormEdit);
 buttonAddCard.addEventListener('click', openFormAddCard);
-
 
 const selectorNames = {
   formSelector: '.popup__form',
@@ -94,7 +95,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCardLink = linkInput.value;
   postCard(newCardPlace, newCardLink)
     .then((cardJson)=>{
-      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal);
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, [], cardJson._id);
       addNewCard(newCard, 0);
     })
     .catch((err)=>{

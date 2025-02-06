@@ -1,5 +1,8 @@
-export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, openImageModal) {
+import { deleteCardFromServer } from "./api";
+
+export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, openImageModal, isMyCard, likes, cardId) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
+  newCard.id = cardId;
 
   const cardImg = newCard.querySelector('.card__image');
   cardImg.src = link;
@@ -10,7 +13,14 @@ export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, op
   cardTitle.textContent = name;
 
   const deleteButton = newCard.querySelector('.card__delete-button');
-  deleteButton.addEventListener('click', deleteCard);
+  if(isMyCard) {
+    deleteButton.addEventListener('click', deleteCard);
+  } else {
+    deleteButton.remove();
+  }
+
+  const likeCount = newCard.querySelector('.card__like-count');
+  likeCount.textContent = likes.length;
 
   const likeButton = newCard.querySelector(".card__like-button");
   likeButton.addEventListener('click', likeOrUnlikeCard);
@@ -21,7 +31,15 @@ export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, op
 
 export function deleteCard(event) {
   const listItem = event.target.closest('li');
-  listItem.remove();
+  const cardId = listItem.id;
+
+  deleteCardFromServer(cardId)
+    .then(()=>{
+      listItem.remove();
+    })
+    .catch((err)=>{
+      console.log(`К сожалению, не смогли удалить публикацию: ошибка ${err}`);
+    });
 }
 
 export function likeOrUnlikeCard(evt) {
