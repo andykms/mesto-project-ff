@@ -47,13 +47,12 @@ const selectorNames = {
 const formEdit = document.forms.edit_profile;
 const nameInput  = formEdit.elements.name;
 const jobInput = formEdit.elements.description;
-const buttonFormEdit = formEdit.querySelector(selectorNames.submitButtonSelector);
+//const buttonFormEdit = formEdit.querySelector(selectorNames.submitButtonSelector);
 
 const formAddCard = document.forms.new_place;
 const placeInput = formAddCard.elements.place_name;
 const linkInput = formAddCard.elements.link;
-const buttonFormAddCard = formAddCard.querySelector(selectorNames.submitButtonSelector);
-
+//const buttonFormAddCard = formAddCard.querySelector(selectorNames.submitButtonSelector);
 
 formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
@@ -94,12 +93,6 @@ function openFormEdit(evt) {
 
 function openFormAddCard(evt) {
   openModal(evt, popupNewCard);
-}
-
-function checkErrorClassesInput(formElement, inputElement) {
-  if (inputElement.classList.contains(selectorNames.inputErrorClass)) {
-    hideInputError(formElement, inputElement);
-  }
 }
 
 function createCardsList() {
