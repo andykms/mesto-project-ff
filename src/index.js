@@ -2,6 +2,7 @@ import { createCard, deleteCard, likeOrUnlikeCard} from './card';
 import { closeModal, addClassesOpen, addListenersOpen } from './modal';
 import { initialCards } from './cards';
 import { enableValidation, clearValidation } from './validation';
+import { getUserInfo, getCards, patchUserInfo } from './api';
 import './pages/index.css';
 
 const content = document.querySelector('.content');
@@ -11,23 +12,47 @@ const addCard = document.querySelector('#card-template').content;
 
 const popupEdit = document.querySelector('.popup_type_edit');
 addAnimationClass(popupEdit);
+
 const popupNewCard = document.querySelector('.popup_type_new-card');
 addAnimationClass(popupNewCard);
+
 const popupImage = document.querySelector('.popup_type_image');
 const modalCaption = popupImage.querySelector(".popup__caption");
+
 const modalImage = popupImage.querySelector(".popup__image");
 addAnimationClass(popupImage);
 
 
 const buttonEditProfile = content.querySelector(".profile__edit-button");
-
 const buttonAddCard = content.querySelector(".profile__add-button");
-
 const profileTitle = content.querySelector(".profile__title");
-
 const profileDescription = content.querySelector(".profile__description");
+const profileImage = content.querySelector(".profile__image");
 
-createCardsList();
+
+
+function insertServerUserInfo(userInfoJson) {
+    profileTitle.textContent = userInfoJson.name;
+    profileDescription.textContent = userInfoJson.about;
+    profileImage.style.backgroundImage = `url(${userInfoJson.avatar})`;
+}
+
+function insertServerCards(cards) {
+  console.log(cards);
+  cards.forEach((card)=>{
+       addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal));
+      });
+}
+
+Promise.all([getUserInfo(), getCards()])
+  .then((results) => {
+    insertServerUserInfo(results[0]);
+    insertServerCards(results[1]);
+  })
+  .catch((err)=>{
+    console.log(`К сожалению, не смогли получить профиль: ошибка ${err}`);
+  })
+
 
 buttonEditProfile.addEventListener('click', openFormEdit);
 buttonAddCard.addEventListener('click', openFormAddCard);
@@ -75,8 +100,13 @@ formAddCard.addEventListener('submit', (evt)=> {
 });
 
 function renameProfile(newName, newDescription) {
-  profileTitle.textContent = newName;
-  profileDescription.textContent = newDescription;
+  patchUserInfo(newName, newDescription)
+    .then((userInfoJson)=>{
+      insertServerUserInfo(userInfoJson);
+    })
+    .catch((err)=>{
+      console.log(`К сожалению, не смогли обновить данные профиля: ошибка ${err}`);
+    });
 }
 
 function addAnimationClass(popup){
@@ -93,12 +123,6 @@ function openFormEdit(evt) {
 
 function openFormAddCard(evt) {
   openModal(evt, popupNewCard);
-}
-
-function createCardsList() {
-  initialCards.forEach(function(item) {
-    addNewCard(createCard(addCard, item['name'], item['link'], deleteCard, likeOrUnlikeCard, openImageModal), -1);
-  });
 }
 
 function openModal(evt,modalWindow) {
