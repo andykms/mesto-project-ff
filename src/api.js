@@ -44,3 +44,23 @@ export function patchUserInfo(newName, newAbout) {
       return Promise.reject(res.status);
     })
 }
+
+export function postCard(name, link){
+  return fetch('https://nomoreparties.co/v1/wff-cohort-31/cards', {
+    method: 'POST',
+    headers: {
+      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      link: link,
+    }),
+  })
+  .then((res)=>{
+    if(res.ok){
+      return res.json();
+    }
+    return Promise.reject(res.status);
+  })
+}

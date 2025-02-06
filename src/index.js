@@ -2,7 +2,7 @@ import { createCard, deleteCard, likeOrUnlikeCard} from './card';
 import { closeModal, addClassesOpen, addListenersOpen } from './modal';
 import { initialCards } from './cards';
 import { enableValidation, clearValidation } from './validation';
-import { getUserInfo, getCards, patchUserInfo } from './api';
+import { getUserInfo, getCards, patchUserInfo, postCard } from './api';
 import './pages/index.css';
 
 const content = document.querySelector('.content');
@@ -92,8 +92,14 @@ formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  const newCard = createCard(addCard, newCardPlace, newCardLink, deleteCard, likeOrUnlikeCard, openImageModal);
-  addNewCard(newCard, 0);
+  postCard(newCardPlace, newCardLink)
+    .then((cardJson)=>{
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal);
+      addNewCard(newCard, 0);
+    })
+    .catch((err)=>{
+      console.log(`К сожалению, не смогли опубликовать новое место: ошибка ${err}`);
+    })
   formAddCard.reset();
   clearValidation(formAddCard, selectorNames);
   closeModal(popupNewCard);
