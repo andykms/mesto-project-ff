@@ -19,7 +19,7 @@ function setEventListeners(formElement, selectorNames) {
   });
 };
 
-export function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
+function toggleButtonState(inputList, buttonElement, inactiveButtonClass) {
   if(hasInvalidInput(inputList)) {
     buttonElement.classList.add(inactiveButtonClass);
   } else {
@@ -49,8 +49,20 @@ function showInputError(formElement, inputElement, errorMessage, inputErrorClass
   errorElement.textContent = errorMessage;
 };
 
-export function hideInputError(formElement, inputElement, inputErrorClass) {
+function hideInputError(formElement, inputElement, inputErrorClass) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.remove(inputErrorClass);
   errorElement.textContent = '';
 };
+
+export function clearValidation(formElement, selectorNames) {
+  const inputList = Array.from(formElement.querySelectorAll(selectorNames.inputSelector));
+  const buttonElement = formElement.querySelector(selectorNames.submitButtonSelector);
+
+  inputList.forEach((inputElement) => {
+    if (inputElement.classList.contains(selectorNames.inputErrorClass)) {
+      hideInputError(formElement, inputElement, selectorNames.inputErrorClass);
+    }
+  });
+  toggleButtonState(inputList, buttonElement, selectorNames.inactiveButtonClass);
+}

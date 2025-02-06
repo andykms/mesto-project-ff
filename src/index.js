@@ -1,7 +1,7 @@
 import { createCard, deleteCard, likeOrUnlikeCard} from './card';
 import { closeModal, addClassesOpen, addListenersOpen } from './modal';
 import { initialCards } from './cards';
-import { enableValidation, hideInputError, toggleButtonState } from './validation';
+import { enableValidation, clearValidation } from './validation';
 import './pages/index.css';
 
 const content = document.querySelector('.content');
@@ -125,14 +125,3 @@ function addNewCard(newCard, index) {
 
 enableValidation(selectorNames);
 
-function clearValidation(formElement, selectorNames) {
-  const inputList = Array.from(formElement.querySelectorAll(selectorNames.inputSelector));
-  const buttonElement = formElement.querySelector(selectorNames.submitButtonSelector);
-
-  inputList.forEach((inputElement) => {
-    if (inputElement.classList.contains(selectorNames.inputErrorClass)) {
-      hideInputError(formElement, inputElement, selectorNames.inputErrorClass);
-    }
-  });
-  toggleButtonState(inputList, buttonElement, selectorNames.inactiveButtonClass);
-}
