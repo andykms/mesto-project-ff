@@ -1,8 +1,5 @@
-import { deleteCardFromServer } from "./api";
-
-export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, openImageModal, isMyCard, likes, cardId) {
+export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
-  newCard.id = cardId;
 
   const cardImg = newCard.querySelector('.card__image');
   cardImg.src = link;
@@ -14,35 +11,20 @@ export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, op
 
   const deleteButton = newCard.querySelector('.card__delete-button');
   if(isMyCard) {
-    deleteButton.addEventListener('click', deleteCard);
+    deleteButton.addEventListener('click', (evt) => deleteCard(evt, cardId));
   } else {
     deleteButton.remove();
   }
 
-  const likeCount = newCard.querySelector('.card__like-count');
-  likeCount.textContent = likes.length;
+  const likeCountElement = newCard.querySelector('.card__like-count');
+  likeCountElement.textContent = likeCount;
 
   const likeButton = newCard.querySelector(".card__like-button");
-  likeButton.addEventListener('click', likeOrUnlikeCard);
-
+  if(hasMyLike) {
+    likeButton.classList.add("card__like-button_is-active");
+  }
+  likeButton.addEventListener('click', (evt) => likeOrUnlikeCard(evt, cardId, likeCountElement));
+  
   return newCard;
-}
-
-
-export function deleteCard(event) {
-  const listItem = event.target.closest('li');
-  const cardId = listItem.id;
-
-  deleteCardFromServer(cardId)
-    .then(()=>{
-      listItem.remove();
-    })
-    .catch((err)=>{
-      console.log(`К сожалению, не смогли удалить публикацию: ошибка ${err}`);
-    });
-}
-
-export function likeOrUnlikeCard(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
 }
 

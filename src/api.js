@@ -79,3 +79,33 @@ export function deleteCardFromServer(_id){
       return Promise.reject(res.status);
     })
 }
+
+export function putLike(cardId) {
+  return fetch(`https://nomoreparties.co/v1/wff-cohort-31/cards/likes/${cardId}`,{
+    method: 'PUT',
+    headers: {
+      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
+    },
+  })
+  .then((res)=>{
+    if(res.ok){
+      return res.json();
+    }
+    return Promise.reject(res.status);
+  })
+}
+
+export function deleteLike(cardId) {
+  return fetch(`https://nomoreparties.co/v1/wff-cohort-31/cards/likes/${cardId}`,{
+    method: 'DELETE',
+    headers: {
+      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
+    },
+  })
+  .then((res)=>{
+    if(res.ok){
+      return res.json();
+    }
+    return Promise.reject(res.status);
+  })
+}

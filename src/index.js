@@ -1,8 +1,7 @@
-import { createCard, deleteCard, likeOrUnlikeCard} from './card';
+import { createCard} from './card';
 import { closeModal, addClassesOpen, addListenersOpen } from './modal';
-import { initialCards } from './cards';
 import { enableValidation, clearValidation } from './validation';
-import { getUserInfo, getCards, patchUserInfo, postCard } from './api';
+import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike } from './api';
 import './pages/index.css';
 
 const content = document.querySelector('.content');
@@ -39,12 +38,23 @@ function insertServerUserInfo(userInfoJson) {
 
 function insertServerCards(cards, myUserId) {
   cards.forEach((card)=>{
-      let itsMyCard = false;
-      if(card.owner._id == myUserId) {
-        itsMyCard = true;
-      }
-      addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal, itsMyCard, card.likes, card._id));
+      addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id));
     });
+}
+
+function checkMyAuthorship(myId, ownerId) {
+  if(myId === ownerId) {
+    return true
+  }
+  else {
+    return false
+  }
+}
+
+function checkOnMyLike(myId, likes) {
+  return likes.some((userId)=>{
+    return userId._id === myId
+  });
 }
 
 Promise.all([getUserInfo(), getCards()])
@@ -95,7 +105,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCardLink = linkInput.value;
   postCard(newCardPlace, newCardLink)
     .then((cardJson)=>{
-      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, [], cardJson._id);
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
       addNewCard(newCard, 0);
     })
     .catch((err)=>{
@@ -156,3 +166,36 @@ function addNewCard(newCard, index) {
 
 enableValidation(selectorNames);
 
+function deleteCard(event, cardId) {
+  const listItem = event.target.closest('li');
+
+  deleteCardFromServer(cardId)
+    .then(()=>{
+      listItem.remove();
+    })
+    .catch((err)=>{
+      console.log(`К сожалению, не смогли удалить публикацию: ошибка ${err}`);
+    });
+}
+
+function likeOrUnlikeCard(evt, cardId, likeCount) {
+  if(evt.target.classList.contains("card__like-button_is-active")) {
+    deleteLike(cardId)
+    .then((res)=>{
+      evt.target.classList.remove("card__like-button_is-active");
+      likeCount.textContent = res.likes.length;
+    })
+    .catch((err)=>{
+      console.log(`К сожалению, произошла ошибка при снятии лайка: ошибка ${err}`);
+    })
+  } else {
+    putLike(cardId)
+      .then((res)=>{
+        evt.target.classList.add("card__like-button_is-active");
+        likeCount.textContent = res.likes.length;
+      })
+      .catch((err)=>{
+        console.log(`К сожалению, произошла ошибка при поставлении лайка: ошибка ${err}`);
+      })
+  }
+}
