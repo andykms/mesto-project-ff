@@ -1,7 +1,7 @@
 import { createCard} from './card';
 import { closeModal, addClassesOpen, addListenersOpen } from './modal';
 import { enableValidation, clearValidation } from './validation';
-import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike } from './api';
+import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike, patchUserAvatar } from './api';
 import './pages/index.css';
 
 const content = document.querySelector('.content');
@@ -18,6 +18,8 @@ addAnimationClass(popupNewCard);
 const popupImage = document.querySelector('.popup_type_image');
 const modalCaption = popupImage.querySelector(".popup__caption");
 
+const popupEditAvatar = document.querySelector('.popup_type_edit-avatar');
+
 const modalImage = popupImage.querySelector(".popup__image");
 addAnimationClass(popupImage);
 
@@ -27,7 +29,6 @@ const buttonAddCard = content.querySelector(".profile__add-button");
 const profileTitle = content.querySelector(".profile__title");
 const profileDescription = content.querySelector(".profile__description");
 const profileImage = content.querySelector(".profile__image");
-
 
 
 function insertServerUserInfo(userInfoJson) {
@@ -66,8 +67,10 @@ Promise.all([getUserInfo(), getCards()])
     console.log(`К сожалению, не смогли получить профиль: ошибка ${err}`);
   })
 
+
 buttonEditProfile.addEventListener('click', openFormEdit);
 buttonAddCard.addEventListener('click', openFormAddCard);
+profileImage.addEventListener('click', openFormEditAvatar);
 
 const selectorNames = {
   formSelector: '.popup__form',
@@ -83,17 +86,22 @@ const selectorNames = {
 const formEdit = document.forms.edit_profile;
 const nameInput  = formEdit.elements.name;
 const jobInput = formEdit.elements.description;
-//const buttonFormEdit = formEdit.querySelector(selectorNames.submitButtonSelector);
+const submitFormEdit = formEdit.querySelector('.popup__button');
 
 const formAddCard = document.forms.new_place;
 const placeInput = formAddCard.elements.place_name;
 const linkInput = formAddCard.elements.link;
-//const buttonFormAddCard = formAddCard.querySelector(selectorNames.submitButtonSelector);
+const submitFormAddCard = formAddCard.querySelector('.popup__button');
+
+const formEditAvatar = document.forms.new_avatar;
+const avatarUrlInput = formEditAvatar.elements.link;
+const submitFormEditAvatar = formEditAvatar.querySelector('.popup__button');
 
 formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
   const newName = nameInput.value;
   const newDescription = jobInput.value;
+  submitFormEdit.textContent = 'Сохранение...';
   renameProfile(newName, newDescription);
   formEdit.reset();
   closeModal(popupEdit);
@@ -103,17 +111,20 @@ formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  postCard(newCardPlace, newCardLink)
-    .then((cardJson)=>{
-      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
-      addNewCard(newCard, 0);
-    })
-    .catch((err)=>{
-      console.log(`К сожалению, не смогли опубликовать новое место: ошибка ${err}`);
-    })
+  submitFormAddCard.textContent = 'Сохранение...';
+  postNewCard(newCardPlace, newCardLink);
   formAddCard.reset();
   clearValidation(formAddCard, selectorNames);
   closeModal(popupNewCard);
+});
+
+formEditAvatar.addEventListener('submit', (evt)=>{
+  evt.preventDefault();
+  submitFormEditAvatar.textContent = 'Сохранение...';
+  changeAvatar(avatarUrlInput.value);
+  formEditAvatar.reset();
+  clearValidation(formEditAvatar, selectorNames);
+  closeModal(popupEditAvatar);
 });
 
 function renameProfile(newName, newDescription) {
@@ -123,9 +134,38 @@ function renameProfile(newName, newDescription) {
     })
     .catch((err)=>{
       console.log(`К сожалению, не смогли обновить данные профиля: ошибка ${err}`);
-    });
+    })
+    .finally(()=>{
+      submitFormEdit.textContent = 'Сохранить';
+    })
 }
 
+function postNewCard(newCardPlace, newCardLink) {
+  postCard(newCardPlace, newCardLink)
+    .then((cardJson)=>{
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
+      addNewCard(newCard, 0);
+    })
+    .catch((err)=>{
+      console.log(`К сожалению, не смогли опубликовать новое место: ошибка ${err}`);
+    })
+    .finally(() =>{
+      submitFormAddCard.textContent = 'Сохранить';
+    })
+}
+
+function changeAvatar(url) {
+  patchUserAvatar(url)
+    .then((res)=>{
+      insertServerUserInfo(res);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    .finally(()=>{
+      submitFormEditAvatar.textContent = 'Сохранить';
+    });
+}
 function addAnimationClass(popup){
   popup.classList.add("popup_is-animated");
 }
@@ -140,6 +180,10 @@ function openFormEdit(evt) {
 
 function openFormAddCard(evt) {
   openModal(evt, popupNewCard);
+}
+
+function openFormEditAvatar(evt) {
+  openModal(evt, popupEditAvatar);
 }
 
 function openModal(evt,modalWindow) {

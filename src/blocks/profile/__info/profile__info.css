@@ -1,5 +1,6 @@
 .profile__info {
   display: grid;
+  padding-left: 29px;
   grid-template-areas: "title button"
   "description description";
   grid-template-columns: minmax(auto, 295px) auto;

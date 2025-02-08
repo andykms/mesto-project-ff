@@ -30,9 +30,7 @@
 
 .popup__input-error {
   padding-block-start: 5px;
-  block-size: 12px;
-  z-index: 15;
-  inset-inline-start: 0;
+  block-size: 14px;
   font-size: 12px;
   font-weight: 400;
   line-height: 14.52px;

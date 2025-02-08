@@ -6,7 +6,7 @@
   border-radius: 50%;
   background-size: cover;
   background-position: center;
-  margin: 0 29px 0 0;
+  z-index: 1;
 }
 
 @media screen and (max-width: 740px) {
@@ -19,4 +19,21 @@
   .profile__image {
     margin-right: 0;
   }
+}
+
+.profile__image_edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  block-size: min-content;
+  inline-size: min-content;
+}
+
+.profile__image_edit:hover {
+  background: transparent url('../../../images/Vector.svg') no-repeat;
+  background-position: center;
+}
+
+.profile__image:hover {
+  opacity: 0.2;
 }

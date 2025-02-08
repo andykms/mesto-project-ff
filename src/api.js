@@ -109,3 +109,42 @@ export function deleteLike(cardId) {
     return Promise.reject(res.status);
   })
 }
+
+function checkImage(url) {
+  return fetch(url, {
+    method: 'HEAD',
+  })
+    .then((res)=>{
+      if(res.ok) {
+        return res;
+      }
+      return Promise.reject(`К сожалению, не смогли обновить аватар профиля: ошибка ${res.status}`);
+    })
+    .then((res)=>{
+      if (res.headers.get('Content-Type').includes('image') ) {
+        return Promise.resolve();
+      }
+    })
+}
+
+export function patchUserAvatar(url) {
+  return checkImage(url)
+    .then(()=>{
+      return fetch('https://nomoreparties.co/v1/wff-cohort-31/users/me/avatar', {
+        method: 'PATCH',
+        headers: {
+          authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          avatar: url,
+        }),
+      })
+    })
+    .then((res)=>{
+      if(res.ok){
+        return res.json();
+      }
+      return Promise.reject(res.status);
+    })
+}
