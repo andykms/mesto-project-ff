@@ -5,6 +5,7 @@ import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, p
 import './pages/index.css';
 
 const content = document.querySelector('.content');
+const contentPage = document.querySelector('.page__content');
 export const cardList = content.querySelector('.places__list');
 
 const addCard = document.querySelector('#card-template').content;
@@ -19,6 +20,8 @@ const popupImage = document.querySelector('.popup_type_image');
 const modalCaption = popupImage.querySelector(".popup__caption");
 
 const popupEditAvatar = document.querySelector('.popup_type_edit-avatar');
+
+const popupDeleteCardTemplate = document.querySelector('#card_popup-delete').content;
 
 const modalImage = popupImage.querySelector(".popup__image");
 addAnimationClass(popupImage);
@@ -96,6 +99,8 @@ const submitFormAddCard = formAddCard.querySelector('.popup__button');
 const formEditAvatar = document.forms.new_avatar;
 const avatarUrlInput = formEditAvatar.elements.link;
 const submitFormEditAvatar = formEditAvatar.querySelector('.popup__button');
+
+const FormDeleteCardConfirm = document.forms.delete_confirm;
 
 formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
@@ -212,14 +217,27 @@ enableValidation(selectorNames);
 
 function deleteCard(event, cardId) {
   const listItem = event.target.closest('li');
-
-  deleteCardFromServer(cardId)
-    .then(()=>{
-      listItem.remove();
-    })
-    .catch((err)=>{
-      console.log(`К сожалению, не смогли удалить публикацию: ошибка ${err}`);
-    });
+  
+  const popupDeleteCard = popupDeleteCardTemplate.querySelector('.popup_type_delete-confirm').cloneNode(true);
+  if(contentPage.querySelector('.popup_type_delete-confirm')) {
+    contentPage.querySelector('.popup_type_delete-confirm').remove();
+  }
+  contentPage.append(popupDeleteCard);
+  openModal(event, popupDeleteCard);
+  document.forms.delete_confirm.addEventListener('submit', (evt)=>{
+    evt.preventDefault();
+    deleteCardFromServer(cardId)
+      .then(()=>{
+        listItem.remove();
+      })
+      .catch((err)=>{
+        console.log(`К сожалению, не смогли удалить публикацию: ошибка ${err}`);
+      })
+      .finally(()=>{
+        closeModal(popupDeleteCard);
+        popupDeleteCard.remove();
+      })
+  })
 }
 
 function likeOrUnlikeCard(evt, cardId, likeCount) {
