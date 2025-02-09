@@ -1,113 +1,77 @@
+const config = {
+  baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-31',
+  headers: {
+    authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
+    'Content-Type': 'application/json'
+  }
+}
+
+function baseResponse(res) {
+  if(res.ok){
+    return res.json()
+  }
+  return Promise.reject(res.status)
+}
+
 export function getUserInfo() {
-  return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-31/users/me', {
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64'
-    }
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers,
   })
-    .then((res)=>{
-      if(res.ok){
-        return res.json()
-      }
-      return Promise.reject(res.status)
-    })
+    .then(baseResponse)
 }
 
 export function getCards() {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-31/cards', {
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64'
-    }
+  return fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers,
   })
-  .then((res)=>{
-    if(res.ok){
-      return res.json()
-    }
-    return Promise.reject(res.status)
-  })
+  .then(baseResponse)
 }
 
 export function patchUserInfo(newName, newAbout) {
-  return fetch('https://nomoreparties.co/v1/wff-cohort-31/users/me', {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
-      'Content-Type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: newName,
       about: newAbout
     })})
-    .then((res)=>{
-      if(res.ok){
-        return res.json();
-      }
-      return Promise.reject(res.status);
-    })
+    .then(baseResponse)
 }
 
 export function postCard(name, link){
-  return fetch('https://nomoreparties.co/v1/wff-cohort-31/cards', {
+  return fetch(`${config.baseUrl}/cards`, {
     method: 'POST',
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
-      'Content-type': 'application/json'
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: name,
       link: link,
     }),
   })
-  .then((res)=>{
-    if(res.ok){
-      return res.json();
-    }
-    return Promise.reject(res.status);
-  })
+  .then(baseResponse)
 }
 
 export function deleteCardFromServer(_id){
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-31/cards/${_id}`, {
+  return fetch(`${config.baseUrl}/cards/${_id}`, {
     method: 'DELETE',
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
-    },
+    headers: config.headers,
   }) 
-    .then((res)=>{
-      if(res.ok){
-        return;
-      }
-      return Promise.reject(res.status);
-    })
+    .then(baseResponse)
 }
 
 export function putLike(cardId) {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-31/cards/likes/${cardId}`,{
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`,{
     method: 'PUT',
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
-    },
+    headers: config.headers,
   })
-  .then((res)=>{
-    if(res.ok){
-      return res.json();
-    }
-    return Promise.reject(res.status);
-  })
+  .then(baseResponse)
 }
 
 export function deleteLike(cardId) {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-31/cards/likes/${cardId}`,{
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`,{
     method: 'DELETE',
-    headers: {
-      authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
-    },
+    headers: config.headers,
   })
-  .then((res)=>{
-    if(res.ok){
-      return res.json();
-    }
-    return Promise.reject(res.status);
-  })
+  .then(baseResponse)
 }
 
 function checkImage(url) {
@@ -130,21 +94,13 @@ function checkImage(url) {
 export function patchUserAvatar(url) {
   return checkImage(url)
     .then(()=>{
-      return fetch('https://nomoreparties.co/v1/wff-cohort-31/users/me/avatar', {
+      return fetch(`${config.baseUrl}/users/me/avatar`, {
         method: 'PATCH',
-        headers: {
-          authorization: '36d03c96-8ae6-42bf-a42e-0f64d965ef64',
-          'Content-type': 'application/json',
-        },
+        headers: config.headers,
         body: JSON.stringify({
           avatar: url,
         }),
       })
     })
-    .then((res)=>{
-      if(res.ok){
-        return res.json();
-      }
-      return Promise.reject(res.status);
-    })
+    .then(baseResponse)
 }

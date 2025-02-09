@@ -61,16 +61,6 @@ function checkOnMyLike(myId, likes) {
   });
 }
 
-Promise.all([getUserInfo(), getCards()])
-  .then((results) => {
-    insertServerUserInfo(results[0]);
-    insertServerCards(results[1], results[0]._id);
-  })
-  .catch((err)=>{
-    console.log(`К сожалению, не смогли получить профиль: ошибка ${err}`);
-  })
-
-
 buttonEditProfile.addEventListener('click', openFormEdit);
 buttonAddCard.addEventListener('click', openFormAddCard);
 profileImage.addEventListener('click', openFormEditAvatar);
@@ -85,6 +75,25 @@ const selectorNames = {
   patternErrorMessage: 'Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы',
 };
 
+const messages = {
+  saving: 'Сохранение...',
+  save: 'Сохранить',
+  errorGiveProfile: 'К сожалению, не смогли получить профиль: ошибка',
+  errorUpdateProfile: 'К сожалению, не смогли обновить данные профиля: ошибка',
+  errorPublicateCard: 'К сожалению, не смогли опубликовать новое место: ошибка',
+  errorDeleteCard: 'К сожалению, не смогли удалить публикацию: ошибка',
+  errorDeleteLike: 'К сожалению, произошла ошибка при снятии лайка: ошибка',
+  errorPutLike: 'К сожалению, произошла ошибка при поставлении лайка: ошибка',
+}
+
+Promise.all([getUserInfo(), getCards()])
+  .then((results) => {
+    insertServerUserInfo(results[0]);
+    insertServerCards(results[1], results[0]._id);
+  })
+  .catch((err)=>{
+    console.log(`${messages.errorGiveProfile} ${err}`);
+  })
 
 const formEdit = document.forms.edit_profile;
 const nameInput  = formEdit.elements.name;
@@ -100,13 +109,11 @@ const formEditAvatar = document.forms.new_avatar;
 const avatarUrlInput = formEditAvatar.elements.link;
 const submitFormEditAvatar = formEditAvatar.querySelector('.popup__button');
 
-const FormDeleteCardConfirm = document.forms.delete_confirm;
-
 formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
   const newName = nameInput.value;
   const newDescription = jobInput.value;
-  submitFormEdit.textContent = 'Сохранение...';
+  submitFormEdit.textContent = messages.saving;
   renameProfile(newName, newDescription);
   formEdit.reset();
   closeModal(popupEdit);
@@ -116,7 +123,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  submitFormAddCard.textContent = 'Сохранение...';
+  submitFormAddCard.textContent = messages.saving;
   postNewCard(newCardPlace, newCardLink);
   formAddCard.reset();
   clearValidation(formAddCard, selectorNames);
@@ -125,12 +132,22 @@ formAddCard.addEventListener('submit', (evt)=> {
 
 formEditAvatar.addEventListener('submit', (evt)=>{
   evt.preventDefault();
-  submitFormEditAvatar.textContent = 'Сохранение...';
+  renameButtonTextSave(submitFormEditAvatar);
   changeAvatar(avatarUrlInput.value);
   formEditAvatar.reset();
   clearValidation(formEditAvatar, selectorNames);
   closeModal(popupEditAvatar);
 });
+
+function renameButtonTextSave(submitButton) {
+  switch (submitButton.textContent){
+    case messages.save:
+      submitButton.textContent = messages.saving;
+      break;
+    default:
+      submitButton.textContent = messages.save;
+  }
+}
 
 function renameProfile(newName, newDescription) {
   patchUserInfo(newName, newDescription)
@@ -138,10 +155,10 @@ function renameProfile(newName, newDescription) {
       insertServerUserInfo(userInfoJson);
     })
     .catch((err)=>{
-      console.log(`К сожалению, не смогли обновить данные профиля: ошибка ${err}`);
+      console.log(`${messages.errorUpdateProfile} ${err}`);
     })
     .finally(()=>{
-      submitFormEdit.textContent = 'Сохранить';
+      renameButtonTextSave(submitFormEdit);
     })
 }
 
@@ -152,10 +169,10 @@ function postNewCard(newCardPlace, newCardLink) {
       addNewCard(newCard, 0);
     })
     .catch((err)=>{
-      console.log(`К сожалению, не смогли опубликовать новое место: ошибка ${err}`);
+      console.log(`${messages.errorPublicateCard} ${err}`);
     })
     .finally(() =>{
-      submitFormAddCard.textContent = 'Сохранить';
+      renameButtonTextSave(submitFormAddCard);
     })
 }
 
@@ -168,9 +185,10 @@ function changeAvatar(url) {
       console.log(err);
     })
     .finally(()=>{
-      submitFormEditAvatar.textContent = 'Сохранить';
+      renameButtonTextSave(submitFormEditAvatar);
     });
 }
+
 function addAnimationClass(popup){
   popup.classList.add("popup_is-animated");
 }
@@ -231,7 +249,7 @@ function deleteCard(event, cardId) {
         listItem.remove();
       })
       .catch((err)=>{
-        console.log(`К сожалению, не смогли удалить публикацию: ошибка ${err}`);
+        console.log(`${messages.errorDeleteCard} ${err}`);
       })
       .finally(()=>{
         closeModal(popupDeleteCard);
@@ -248,7 +266,7 @@ function likeOrUnlikeCard(evt, cardId, likeCount) {
       likeCount.textContent = res.likes.length;
     })
     .catch((err)=>{
-      console.log(`К сожалению, произошла ошибка при снятии лайка: ошибка ${err}`);
+      console.log(`${messages.errorDeleteLike} ${err}`);
     })
   } else {
     putLike(cardId)
@@ -257,7 +275,7 @@ function likeOrUnlikeCard(evt, cardId, likeCount) {
         likeCount.textContent = res.likes.length;
       })
       .catch((err)=>{
-        console.log(`К сожалению, произошла ошибка при поставлении лайка: ошибка ${err}`);
+        console.log(`${messages.errorPutLike} ${err}`);
       })
   }
 }
