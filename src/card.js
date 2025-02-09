@@ -10,6 +10,7 @@ export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, op
   cardTitle.textContent = name;
 
   const deleteButton = newCard.querySelector('.card__delete-button');
+  
   if(isMyCard) {
     deleteButton.addEventListener('click', (evt) => deleteCard(evt, cardId));
   } else {
@@ -20,9 +21,11 @@ export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, op
   likeCountElement.textContent = likeCount;
 
   const likeButton = newCard.querySelector(".card__like-button");
+
   if(hasMyLike) {
     likeButton.classList.add("card__like-button_is-active");
   }
+
   likeButton.addEventListener('click', (evt) => likeOrUnlikeCard(evt, cardId, likeCountElement));
   
   return newCard;

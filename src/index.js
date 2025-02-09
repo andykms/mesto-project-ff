@@ -4,66 +4,27 @@ import { enableValidation, clearValidation } from './validation';
 import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike, patchUserAvatar } from './api';
 import './pages/index.css';
 
-const content = document.querySelector('.content');
-const contentPage = document.querySelector('.page__content');
-export const cardList = content.querySelector('.places__list');
-
-const addCard = document.querySelector('#card-template').content;
-
-const popupEdit = document.querySelector('.popup_type_edit');
-addAnimationClass(popupEdit);
-
-const popupNewCard = document.querySelector('.popup_type_new-card');
-addAnimationClass(popupNewCard);
-
-const popupImage = document.querySelector('.popup_type_image');
-const modalCaption = popupImage.querySelector(".popup__caption");
-
-const popupEditAvatar = document.querySelector('.popup_type_edit-avatar');
-
-const popupDeleteCardTemplate = document.querySelector('#card_popup-delete').content;
-
-const modalImage = popupImage.querySelector(".popup__image");
-addAnimationClass(popupImage);
-
-
-const buttonEditProfile = content.querySelector(".profile__edit-button");
-const buttonAddCard = content.querySelector(".profile__add-button");
-const profileTitle = content.querySelector(".profile__title");
-const profileDescription = content.querySelector(".profile__description");
-const profileImage = content.querySelector(".profile__image");
-
-
-function insertServerUserInfo(userInfoJson) {
-    profileTitle.textContent = userInfoJson.name;
-    profileDescription.textContent = userInfoJson.about;
-    profileImage.style.backgroundImage = `url(${userInfoJson.avatar})`;
+const baseSelectors = {
+  content: '.content',
+  contentPage: '.page__content',
+  cardList: '.places__list',
+  addCard: '#card-template',
+  popupEdit: '.popup_type_edit',
+  popupNewCard: '.popup_type_new-card',
+  popupImage: '.popup_type_image',
+  modalCaption: '.popup__caption',
+  popupEditAvatar: '.popup_type_edit-avatar',
+  popupDeleteCardTemplate: '#card_popup-delete',
+  modalImage: '.popup__image',
+  buttonEditProfile: ".profile__edit-button",
+  buttonAddCard: ".profile__add-button",
+  profileTitle: ".profile__title",
+  profileDescription: ".profile__description",
+  profileImage: ".profile__image",
+  submitButton: ".popup__button",
+  popupDeleteCard: '.popup_type_delete-confirm',
+  cardLikeButtonActive: "card__like-button_is-active",
 }
-
-function insertServerCards(cards, myUserId) {
-  cards.forEach((card)=>{
-      addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id));
-    });
-}
-
-function checkMyAuthorship(myId, ownerId) {
-  if(myId === ownerId) {
-    return true
-  }
-  else {
-    return false
-  }
-}
-
-function checkOnMyLike(myId, likes) {
-  return likes.some((userId)=>{
-    return userId._id === myId
-  });
-}
-
-buttonEditProfile.addEventListener('click', openFormEdit);
-buttonAddCard.addEventListener('click', openFormAddCard);
-profileImage.addEventListener('click', openFormEditAvatar);
 
 const selectorNames = {
   formSelector: '.popup__form',
@@ -84,8 +45,73 @@ const messages = {
   errorDeleteCard: 'К сожалению, не смогли удалить публикацию: ошибка',
   errorDeleteLike: 'К сожалению, произошла ошибка при снятии лайка: ошибка',
   errorPutLike: 'К сожалению, произошла ошибка при поставлении лайка: ошибка',
+  errorChangeAvatar: 'К сожалению, не смогли обновить аватар: ошибка',
 }
 
+//Вызов функции для вставки проверок инпутов
+enableValidation(selectorNames);
+
+const content = document.querySelector(baseSelectors.content);
+const contentPage = document.querySelector(baseSelectors.contentPage);
+export const cardList = content.querySelector(baseSelectors.cardList);
+
+const addCard = document.querySelector(baseSelectors.addCard).content;
+
+const popupEdit = document.querySelector(baseSelectors.popupEdit);
+addAnimationClass(popupEdit);
+
+const popupNewCard = document.querySelector(baseSelectors.popupNewCard);
+addAnimationClass(popupNewCard);
+
+const popupImage = document.querySelector(baseSelectors.popupImage);
+const modalCaption = popupImage.querySelector(baseSelectors.modalCaption);
+
+const popupEditAvatar = document.querySelector(baseSelectors.popupEditAvatar);
+
+const popupDeleteCardTemplate = document.querySelector(baseSelectors.popupDeleteCardTemplate).content;
+
+const modalImage = popupImage.querySelector(baseSelectors.modalImage);
+addAnimationClass(popupImage);
+
+
+const buttonEditProfile = content.querySelector(baseSelectors.buttonEditProfile);
+const buttonAddCard = content.querySelector(baseSelectors.buttonAddCard);
+const profileTitle = content.querySelector(baseSelectors.profileTitle);
+const profileDescription = content.querySelector(baseSelectors.profileDescription);
+const profileImage = content.querySelector(baseSelectors.profileImage);
+
+
+function insertServerUserInfo(userInfoJson) {
+    profileTitle.textContent = userInfoJson.name;
+    profileDescription.textContent = userInfoJson.about;
+    profileImage.style.backgroundImage = `url(${userInfoJson.avatar})`;
+}
+
+function insertServerCards(cards, myUserId) {
+  cards.forEach((card)=>{
+      addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id));
+    });
+}
+
+function checkMyAuthorship(myId, ownerId) {
+  if(myId === ownerId) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function checkOnMyLike(myId, likes) {
+  return likes.some((userId)=>{
+    return userId._id === myId
+  });
+}
+
+buttonEditProfile.addEventListener('click', openFormEdit);
+buttonAddCard.addEventListener('click', openFormAddCard);
+profileImage.addEventListener('click', openFormEditAvatar);
+
+//Вызов промиса для отображения данных пользователя и карточек
 Promise.all([getUserInfo(), getCards()])
   .then((results) => {
     insertServerUserInfo(results[0]);
@@ -98,16 +124,16 @@ Promise.all([getUserInfo(), getCards()])
 const formEdit = document.forms.edit_profile;
 const nameInput  = formEdit.elements.name;
 const jobInput = formEdit.elements.description;
-const submitFormEdit = formEdit.querySelector('.popup__button');
+const submitFormEdit = formEdit.querySelector(baseSelectors.submitButton);
 
 const formAddCard = document.forms.new_place;
 const placeInput = formAddCard.elements.place_name;
 const linkInput = formAddCard.elements.link;
-const submitFormAddCard = formAddCard.querySelector('.popup__button');
+const submitFormAddCard = formAddCard.querySelector(baseSelectors.submitButton);
 
 const formEditAvatar = document.forms.new_avatar;
 const avatarUrlInput = formEditAvatar.elements.link;
-const submitFormEditAvatar = formEditAvatar.querySelector('.popup__button');
+const submitFormEditAvatar = formEditAvatar.querySelector(baseSelectors.submitButton);
 
 formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
@@ -182,7 +208,7 @@ function changeAvatar(url) {
       insertServerUserInfo(res);
     })
     .catch((err)=>{
-      console.log(err);
+      console.log(`${messages.errorChangeAvatar} ${err}`);
     })
     .finally(()=>{
       renameButtonTextSave(submitFormEditAvatar);
@@ -231,14 +257,12 @@ function addNewCard(newCard, index) {
   }
 }
 
-enableValidation(selectorNames);
-
 function deleteCard(event, cardId) {
   const listItem = event.target.closest('li');
   
-  const popupDeleteCard = popupDeleteCardTemplate.querySelector('.popup_type_delete-confirm').cloneNode(true);
-  if(contentPage.querySelector('.popup_type_delete-confirm')) {
-    contentPage.querySelector('.popup_type_delete-confirm').remove();
+  const popupDeleteCard = popupDeleteCardTemplate.querySelector(baseSelectors.popupDeleteCard).cloneNode(true);
+  if(contentPage.querySelector(baseSelectors.popupDeleteCard)) {
+    contentPage.querySelector(baseSelectors.popupDeleteCard).remove();
   }
   contentPage.append(popupDeleteCard);
   openModal(event, popupDeleteCard);
@@ -259,10 +283,11 @@ function deleteCard(event, cardId) {
 }
 
 function likeOrUnlikeCard(evt, cardId, likeCount) {
-  if(evt.target.classList.contains("card__like-button_is-active")) {
+  const likeButton = evt.target;
+  if(likeButton.classList.contains(baseSelectors.cardLikeButtonActive)) {
     deleteLike(cardId)
     .then((res)=>{
-      evt.target.classList.remove("card__like-button_is-active");
+      likeButton.classList.remove(baseSelectors.cardLikeButtonActive);
       likeCount.textContent = res.likes.length;
     })
     .catch((err)=>{
@@ -271,7 +296,7 @@ function likeOrUnlikeCard(evt, cardId, likeCount) {
   } else {
     putLike(cardId)
       .then((res)=>{
-        evt.target.classList.add("card__like-button_is-active");
+        likeButton.classList.add(baseSelectors.cardLikeButtonActive);
         likeCount.textContent = res.likes.length;
       })
       .catch((err)=>{

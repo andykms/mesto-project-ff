@@ -29,6 +29,7 @@
 }
 
 .popup__input-error {
+  z-index: 15;
   padding-block-start: 5px;
   block-size: 14px;
   font-size: 12px;

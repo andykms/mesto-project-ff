@@ -74,33 +74,13 @@ export function deleteLike(cardId) {
   .then(baseResponse)
 }
 
-function checkImage(url) {
-  return fetch(url, {
-    method: 'HEAD',
-  })
-    .then((res)=>{
-      if(res.ok) {
-        return res;
-      }
-      return Promise.reject(`К сожалению, не смогли обновить аватар профиля: ошибка ${res.status}`);
-    })
-    .then((res)=>{
-      if (res.headers.get('Content-Type').includes('image') ) {
-        return Promise.resolve();
-      }
-    })
-}
-
 export function patchUserAvatar(url) {
-  return checkImage(url)
-    .then(()=>{
-      return fetch(`${config.baseUrl}/users/me/avatar`, {
-        method: 'PATCH',
-        headers: config.headers,
-        body: JSON.stringify({
-          avatar: url,
-        }),
-      })
-    })
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: url,
+    }),
+  })
     .then(baseResponse)
 }
