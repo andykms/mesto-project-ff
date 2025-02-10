@@ -1,3 +1,5 @@
+import { messages } from "./constants";
+
 export function renameButtonTextSave(submitButton) {
   switch (submitButton.textContent){
     case messages.save:
