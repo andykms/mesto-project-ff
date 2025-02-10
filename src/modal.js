@@ -10,16 +10,17 @@ function checkCloseKeyup(evt) {
   }
 }
 
-function checkCloseClick(evt, modalWindow) {
+function checkCloseClick(evt) {
   if (evt.target.classList.contains("popup") ||
       evt.target.classList.contains("popup__close")) {
+        const modalWindow = document.querySelector(".popup_is-opened");
         closeModal(modalWindow);
   }
 }
 
 export function closeModal(modalWindow) {
   removeClassesClose(modalWindow);
-  removeListeners();
+  removeListeners(modalWindow);
 }
 
 export function addClassesOpen(modalWindow) {
@@ -28,11 +29,12 @@ export function addClassesOpen(modalWindow) {
 
 export function addListenersOpen(modalWindow) {
   document.addEventListener('keyup', checkCloseKeyup);
-  modalWindow.addEventListener('click', (evt)=> checkCloseClick(evt, modalWindow));
+  modalWindow.addEventListener('click', checkCloseClick);
 }
 
-export function removeListeners() {
+export function removeListeners(modalWindow) {
   document.removeEventListener('keyup', checkCloseKeyup);
+  modalWindow.removeEventListener('click', checkCloseClick)
 }
 
 function removeClassesClose(modalWindow) {
