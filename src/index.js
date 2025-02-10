@@ -1,7 +1,7 @@
-import { createCard} from './card';
+import { createCard, toggleLikeCard} from './card';
 import { closeModal, openModal } from './modal';
 import { enableValidation, clearValidation } from './validation';
-import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike, patchUserAvatar } from './api';
+import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, patchUserAvatar } from './api';
 import './pages/index.css';
 import { messages, selectorNames, baseSelectors } from './constants';
 import { renameButtonTextSave, addAnimationClass } from './utils';
@@ -48,7 +48,7 @@ function insertServerUserInfo(userInfoJson) {
 
 function insertServerCards(cards, myUserId) {
   cards.forEach((card)=>{
-      addNewCard(createCard(addCard, card.name, card.link, deleteCard, likeOrUnlikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id));
+      addNewCard(createCard(addCard, card.name, card.link, deleteCard, toggleLikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id));
     });
 }
 
@@ -133,7 +133,7 @@ function renameProfile(newName, newDescription) {
 function postNewCard(newCardPlace, newCardLink) {
   postCard(newCardPlace, newCardLink)
     .then((cardJson)=>{
-      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, toggleLikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
       addNewCard(newCard, 0);
       formAddCard.reset();
       clearValidation(formAddCard, selectorNames);
@@ -196,6 +196,7 @@ function addNewCard(newCard, index) {
   }
 }
 
+//НЕ ЗАБЫТЬ ИСПРАВИТЬ \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 function deleteCard(event, cardId) {
   const listItem = event.target.closest('li');
   
@@ -220,26 +221,4 @@ function deleteCard(event, cardId) {
       })
   })
 }
-
-function likeOrUnlikeCard(evt, cardId, likeCount) {
-  const likeButton = evt.target;
-  if(likeButton.classList.contains(baseSelectors.cardLikeButtonActive)) {
-    deleteLike(cardId)
-    .then((res)=>{
-      likeButton.classList.remove(baseSelectors.cardLikeButtonActive);
-      likeCount.textContent = res.likes.length;
-    })
-    .catch((err)=>{
-      console.log(`${messages.errorDeleteLike} ${err}`);
-    })
-  } else {
-    putLike(cardId)
-      .then((res)=>{
-        likeButton.classList.add(baseSelectors.cardLikeButtonActive);
-        likeCount.textContent = res.likes.length;
-      })
-      .catch((err)=>{
-        console.log(`${messages.errorPutLike} ${err}`);
-      })
-  }
-}
+//НАДО ИСПРАВИТЬ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -1,4 +1,8 @@
-export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId) {
+import { baseSelectors } from "./constants";
+import { putLike, deleteLike } from "./api";
+
+
+export function createCard(addCard, name, link, deleteCard, toggleLikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
 
   const cardImg = newCard.querySelector('.card__image');
@@ -26,8 +30,30 @@ export function createCard(addCard, name, link, deleteCard, likeOrUnlikeCard, op
     likeButton.classList.add("card__like-button_is-active");
   }
 
-  likeButton.addEventListener('click', (evt) => likeOrUnlikeCard(evt, cardId, likeCountElement));
+  likeButton.addEventListener('click', (evt) => toggleLikeCard(evt, cardId, likeCountElement));
   
   return newCard;
 }
 
+export function toggleLikeCard(evt, cardId, likeCount) {
+  const likeButton = evt.target;
+  if(likeButton.classList.contains(baseSelectors.cardLikeButtonActive)) {
+    deleteLike(cardId)
+    .then((res)=>{
+      likeButton.classList.remove(baseSelectors.cardLikeButtonActive);
+      likeCount.textContent = res.likes.length;
+    })
+    .catch((err)=>{
+      console.log(`${messages.errorDeleteLike} ${err}`);
+    })
+  } else {
+    putLike(cardId)
+      .then((res)=>{
+        likeButton.classList.add(baseSelectors.cardLikeButtonActive);
+        likeCount.textContent = res.likes.length;
+      })
+      .catch((err)=>{
+        console.log(`${messages.errorPutLike} ${err}`);
+      })
+  }
+}
