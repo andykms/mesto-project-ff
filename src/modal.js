@@ -1,3 +1,8 @@
+export function openModal(evt,modalWindow) {
+  addClassesOpen(modalWindow);
+  addListenersOpen(modalWindow);
+}
+
 function checkCloseKeyup(evt) {
   if(evt.key === 'Escape') {
     const modalWindow = document.querySelector(".popup_is-opened");

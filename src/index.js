@@ -1,5 +1,5 @@
 import { createCard} from './card';
-import { closeModal, addClassesOpen, addListenersOpen } from './modal';
+import { closeModal, openModal } from './modal';
 import { enableValidation, clearValidation } from './validation';
 import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike, patchUserAvatar } from './api';
 import './pages/index.css';
@@ -177,11 +177,6 @@ function openFormAddCard(evt) {
 
 function openFormEditAvatar(evt) {
   openModal(evt, popupEditAvatar);
-}
-
-function openModal(evt,modalWindow) {
-  addClassesOpen(modalWindow);
-  addListenersOpen(modalWindow);
 }
 
 function openImageModal(evt) {

@@ -11,3 +11,4 @@ export function renameButtonTextSave(submitButton) {
 export function addAnimationClass(popup){
   popup.classList.add("popup_is-animated");
 }
+
