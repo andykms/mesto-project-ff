@@ -98,8 +98,6 @@ formEdit.addEventListener('submit',(evt) => {
   const newDescription = jobInput.value;
   submitFormEdit.textContent = messages.saving;
   renameProfile(newName, newDescription);
-  formEdit.reset();
-  closeModal(popupEdit);
 });
 
 formAddCard.addEventListener('submit', (evt)=> {
@@ -108,18 +106,12 @@ formAddCard.addEventListener('submit', (evt)=> {
   const newCardLink = linkInput.value;
   submitFormAddCard.textContent = messages.saving;
   postNewCard(newCardPlace, newCardLink);
-  formAddCard.reset();
-  clearValidation(formAddCard, selectorNames);
-  closeModal(popupNewCard);
 });
 
 formEditAvatar.addEventListener('submit', (evt)=>{
   evt.preventDefault();
   renameButtonTextSave(submitFormEditAvatar);
   changeAvatar(avatarUrlInput.value);
-  formEditAvatar.reset();
-  clearValidation(formEditAvatar, selectorNames);
-  closeModal(popupEditAvatar);
 });
 
 function renameButtonTextSave(submitButton) {
@@ -136,6 +128,7 @@ function renameProfile(newName, newDescription) {
   patchUserInfo(newName, newDescription)
     .then((userInfoJson)=>{
       insertServerUserInfo(userInfoJson);
+      closeModal(popupEdit);
     })
     .catch((err)=>{
       console.log(`${messages.errorUpdateProfile} ${err}`);
@@ -150,6 +143,9 @@ function postNewCard(newCardPlace, newCardLink) {
     .then((cardJson)=>{
       const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, likeOrUnlikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
       addNewCard(newCard, 0);
+      formAddCard.reset();
+      clearValidation(formAddCard, selectorNames);
+      closeModal(popupNewCard);
     })
     .catch((err)=>{
       console.log(`${messages.errorPublicateCard} ${err}`);
@@ -163,6 +159,9 @@ function changeAvatar(url) {
   patchUserAvatar(url)
     .then((res)=>{
       insertServerUserInfo(res);
+      formEditAvatar.reset();
+      clearValidation(formEditAvatar, selectorNames);
+      closeModal(popupEditAvatar);
     })
     .catch((err)=>{
       console.log(`${messages.errorChangeAvatar} ${err}`);
