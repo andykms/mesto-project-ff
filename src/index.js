@@ -4,6 +4,8 @@ import { enableValidation, clearValidation } from './validation';
 import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike, patchUserAvatar } from './api';
 import './pages/index.css';
 import { messages, selectorNames, baseSelectors } from './constants';
+import { renameButtonTextSave } from './utils';
+
 
 //Вызов функции для вставки проверок инпутов
 enableValidation(selectorNames);
@@ -113,16 +115,6 @@ formEditAvatar.addEventListener('submit', (evt)=>{
   renameButtonTextSave(submitFormEditAvatar);
   changeAvatar(avatarUrlInput.value);
 });
-
-function renameButtonTextSave(submitButton) {
-  switch (submitButton.textContent){
-    case messages.save:
-      submitButton.textContent = messages.saving;
-      break;
-    default:
-      submitButton.textContent = messages.save;
-  }
-}
 
 function renameProfile(newName, newDescription) {
   patchUserInfo(newName, newDescription)
