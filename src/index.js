@@ -198,8 +198,6 @@ function addNewCard(newCard, index) {
   }
 }
 
-//НЕ ЗАБЫТЬ ИСПРАВИТЬ \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-//НАДО ИСПРАВИТЬ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 function openConfirmationPopup(evt, deleteCard, cardId) {
   popupDeleteCard.id = cardId;
