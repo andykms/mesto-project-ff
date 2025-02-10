@@ -4,7 +4,7 @@ import { enableValidation, clearValidation } from './validation';
 import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, putLike, deleteLike, patchUserAvatar } from './api';
 import './pages/index.css';
 import { messages, selectorNames, baseSelectors } from './constants';
-import { renameButtonTextSave } from './utils';
+import { renameButtonTextSave, addAnimationClass } from './utils';
 
 
 //Вызов функции для вставки проверок инпутов
@@ -161,10 +161,6 @@ function changeAvatar(url) {
     .finally(()=>{
       renameButtonTextSave(submitFormEditAvatar);
     });
-}
-
-function addAnimationClass(popup){
-  popup.classList.add("popup_is-animated");
 }
 
 function openFormEdit(evt) {

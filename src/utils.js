@@ -7,3 +7,7 @@ export function renameButtonTextSave(submitButton) {
       submitButton.textContent = messages.save;
   }
 }
+
+export function addAnimationClass(popup){
+  popup.classList.add("popup_is-animated");
+}
