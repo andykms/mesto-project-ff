@@ -1,8 +1,8 @@
 import { baseSelectors } from "./constants";
-import { putLike, deleteLike } from "./api";
+import { putLike, deleteLike, deleteCardFromServer } from "./api";
+import { closeModal } from "./modal";
 
-
-export function createCard(addCard, name, link, deleteCard, toggleLikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId) {
+export function createCard(addCard, name, link, deleteCard, toggleLikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId, openConfirmationPopup) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
 
   const cardImg = newCard.querySelector('.card__image');
@@ -16,7 +16,7 @@ export function createCard(addCard, name, link, deleteCard, toggleLikeCard, open
   const deleteButton = newCard.querySelector('.card__delete-button');
   
   if(isMyCard) {
-    deleteButton.addEventListener('click', (evt) => deleteCard(evt, cardId));
+    deleteButton.addEventListener('click', (evt) => openConfirmationPopup(evt, deleteCard, cardId));
   } else {
     deleteButton.remove();
   }
@@ -56,4 +56,19 @@ export function toggleLikeCard(evt, cardId, likeCount) {
         console.log(`${messages.errorPutLike} ${err}`);
       })
   }
+}
+
+export function deleteCard(evt, cardId, listItem, popupDeleteCard) {
+  evt.preventDefault();
+  deleteCardFromServer(cardId)
+    .then(()=>{
+      listItem.remove();
+    })
+    .catch((err)=>{
+      console.log(`${messages.errorDeleteCard} ${err}`);
+    })
+    .finally(()=>{
+      closeModal(popupDeleteCard);
+      popupDeleteCard.remove();
+      })
 }

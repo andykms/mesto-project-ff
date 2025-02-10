@@ -1,4 +1,4 @@
-import { createCard, toggleLikeCard} from './card';
+import { createCard, toggleLikeCard, deleteCard} from './card';
 import { closeModal, openModal } from './modal';
 import { enableValidation, clearValidation } from './validation';
 import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, patchUserAvatar } from './api';
@@ -48,7 +48,7 @@ function insertServerUserInfo(userInfoJson) {
 
 function insertServerCards(cards, myUserId) {
   cards.forEach((card)=>{
-      addNewCard(createCard(addCard, card.name, card.link, deleteCard, toggleLikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id));
+      addNewCard(createCard(addCard, card.name, card.link, deleteCard, toggleLikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id, openConfirmationPopup));
     });
 }
 
@@ -133,7 +133,7 @@ function renameProfile(newName, newDescription) {
 function postNewCard(newCardPlace, newCardLink) {
   postCard(newCardPlace, newCardLink)
     .then((cardJson)=>{
-      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, toggleLikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id);
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, toggleLikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id, openConfirmationPopup);
       addNewCard(newCard, 0);
       formAddCard.reset();
       clearValidation(formAddCard, selectorNames);
@@ -197,28 +197,15 @@ function addNewCard(newCard, index) {
 }
 
 //НЕ ЗАБЫТЬ ИСПРАВИТЬ \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-function deleteCard(event, cardId) {
-  const listItem = event.target.closest('li');
-  
+//НАДО ИСПРАВИТЬ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+function openConfirmationPopup(evt, deleteCard, cardId) {
+  const listItem = evt.target.closest('li'); 
   const popupDeleteCard = popupDeleteCardTemplate.querySelector(baseSelectors.popupDeleteCard).cloneNode(true);
   if(contentPage.querySelector(baseSelectors.popupDeleteCard)) {
     contentPage.querySelector(baseSelectors.popupDeleteCard).remove();
   }
   contentPage.append(popupDeleteCard);
-  openModal(event, popupDeleteCard);
-  document.forms.delete_confirm.addEventListener('submit', (evt)=>{
-    evt.preventDefault();
-    deleteCardFromServer(cardId)
-      .then(()=>{
-        listItem.remove();
-      })
-      .catch((err)=>{
-        console.log(`${messages.errorDeleteCard} ${err}`);
-      })
-      .finally(()=>{
-        closeModal(popupDeleteCard);
-        popupDeleteCard.remove();
-      })
-  })
+  openModal(evt, popupDeleteCard);
+  document.forms.delete_confirm.addEventListener('submit', (evt) => deleteCard(evt, cardId, listItem, popupDeleteCard))
 }
-//НАДО ИСПРАВИТЬ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
