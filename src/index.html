@@ -38,7 +38,7 @@
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
-      <form class="popup__form" name="edit_profile">
+      <form class="popup__form" name="edit_profile" novalidate>
         <label class = "popup__input-area">
           <input type="text" name="name" class="popup__input popup__input_type_name" id = "name_input" placeholder="Имя" required minlength="2" maxlength="40" pattern="[а-яёА-ЯЁa-zA-Z\s\-]+">
           <span class = "popup__input-error name_input-error"></span>
@@ -55,7 +55,7 @@
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
-      <form class="popup__form" name="new_place">
+      <form class="popup__form" name="new_place" novalidate>
         <label class = "popup__input-area">
           <input type="text" name="place_name" class="popup__input popup__input_type_card-name" id = "card-name_input" placeholder="Название" required minlength="2" maxlength="30" pattern="[а-яёА-ЯЁa-zA-Z\s\-]+">
           <span class = "popup__input-error card-name_input-error"></span>
@@ -79,7 +79,7 @@
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Обновить аватар</h3>
-      <form class="popup__form" name="new_avatar">
+      <form class="popup__form" name="new_avatar" novalidate>
         <label class = "popup__input-area">
           <input type="url" name="link" class="popup__input popup__input_type_avatar-url" id = "avatar-url_input" placeholder="Ссылка на картинку" required>
           <span class = "popup__input-error avatar-url_input-error"></span>
