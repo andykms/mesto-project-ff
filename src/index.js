@@ -1,7 +1,7 @@
 import { createCard, toggleLikeCard, deleteCard} from './card';
 import { closeModal, openModal } from './modal';
 import { enableValidation, clearValidation } from './validation';
-import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardFromServer, patchUserAvatar } from './api';
+import { getUserInfo, getCards, patchUserInfo, postCard, patchUserAvatar } from './api';
 import './pages/index.css';
 import { messages, selectorNames, baseSelectors } from './constants';
 import { renameButtonTextSave, addAnimationClass } from './utils';
@@ -26,8 +26,10 @@ const popupImage = document.querySelector(baseSelectors.popupImage);
 const modalCaption = popupImage.querySelector(baseSelectors.modalCaption);
 
 const popupEditAvatar = document.querySelector(baseSelectors.popupEditAvatar);
+addAnimationClass(popupEditAvatar);
 
-const popupDeleteCardTemplate = document.querySelector(baseSelectors.popupDeleteCardTemplate).content;
+const popupDeleteCard = document.querySelector(baseSelectors.popupDeleteCard);
+addAnimationClass(popupDeleteCard);
 
 const modalImage = popupImage.querySelector(baseSelectors.modalImage);
 addAnimationClass(popupImage);
@@ -200,12 +202,7 @@ function addNewCard(newCard, index) {
 //НАДО ИСПРАВИТЬ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 function openConfirmationPopup(evt, deleteCard, cardId) {
-  const listItem = evt.target.closest('li'); 
-  const popupDeleteCard = popupDeleteCardTemplate.querySelector(baseSelectors.popupDeleteCard).cloneNode(true);
-  if(contentPage.querySelector(baseSelectors.popupDeleteCard)) {
-    contentPage.querySelector(baseSelectors.popupDeleteCard).remove();
-  }
-  contentPage.append(popupDeleteCard);
+  popupDeleteCard.id = cardId;
   openModal(evt, popupDeleteCard);
-  document.forms.delete_confirm.addEventListener('submit', (evt) => deleteCard(evt, cardId, listItem, popupDeleteCard))
+  popupDeleteCard.addEventListener('submit', deleteCard);
 }

@@ -4,7 +4,7 @@ import { closeModal } from "./modal";
 
 export function createCard(addCard, name, link, deleteCard, toggleLikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId, openConfirmationPopup) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
-
+  newCard.id = cardId;
   const cardImg = newCard.querySelector('.card__image');
   cardImg.src = link;
   cardImg.alt = name;
@@ -58,8 +58,11 @@ export function toggleLikeCard(evt, cardId, likeCount) {
   }
 }
 
-export function deleteCard(evt, cardId, listItem, popupDeleteCard) {
+export function deleteCard(evt) {
   evt.preventDefault();
+  const popupDeleteCard = evt.currentTarget;
+  const cardId = popupDeleteCard.id;
+  const listItem = document.getElementById(`${cardId}`);
   deleteCardFromServer(cardId)
     .then(()=>{
       listItem.remove();
@@ -69,6 +72,6 @@ export function deleteCard(evt, cardId, listItem, popupDeleteCard) {
     })
     .finally(()=>{
       closeModal(popupDeleteCard);
-      popupDeleteCard.remove();
+      popupDeleteCard.removeEventListener('submit', deleteCard);
       })
 }
