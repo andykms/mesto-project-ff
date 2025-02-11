@@ -1,7 +1,7 @@
-import { createCard, toggleLikeCard, deleteCard} from './card';
-import { closeModal, openModal } from './modal';
+import { createCard, toggleLikeCard, deleteCard} from './components/card';
+import { closeModal, openModal } from './components/modal';
 import { enableValidation, clearValidation } from './validation';
-import { getUserInfo, getCards, patchUserInfo, postCard, patchUserAvatar } from './api';
+import { getUserInfo, getCards, patchUserInfo, postCard, patchUserAvatar } from './components/api';
 import './pages/index.css';
 import { messages, selectorNames, baseSelectors } from './constants';
 import { renameButtonTextSave, addAnimationClass } from './utils';

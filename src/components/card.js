@@ -1,4 +1,4 @@
-import { baseSelectors } from "./constants";
+import { baseSelectors } from "../constants";
 import { putLike, deleteLike, deleteCardFromServer } from "./api";
 import { closeModal } from "./modal";
 
