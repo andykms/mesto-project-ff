@@ -66,12 +66,12 @@ export function deleteCard(evt) {
   deleteCardFromServer(cardId)
     .then(()=>{
       listItem.remove();
+      closeModal(popupDeleteCard);
     })
     .catch((err)=>{
       console.log(`${messages.errorDeleteCard} ${err}`);
     })
     .finally(()=>{
-      closeModal(popupDeleteCard);
       popupDeleteCard.removeEventListener('submit', deleteCard);
       })
 }
