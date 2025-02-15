@@ -11,7 +11,6 @@ import { renameButtonTextSave, addAnimationClass } from './utils';
 enableValidation(selectorNames);
 
 const content = document.querySelector(baseSelectors.content);
-const contentPage = document.querySelector(baseSelectors.contentPage);
 const cardList = content.querySelector(baseSelectors.cardList);
 
 const addCard = document.querySelector(baseSelectors.addCard).content;
@@ -100,7 +99,7 @@ formEdit.addEventListener('submit',(evt) => {
   evt.preventDefault();
   const newName = nameInput.value;
   const newDescription = jobInput.value;
-  submitFormEdit.textContent = messages.saving;
+  renameButtonTextSave(submitFormEdit);
   renameProfile(newName, newDescription);
 });
 
@@ -108,7 +107,7 @@ formAddCard.addEventListener('submit', (evt)=> {
   evt.preventDefault();
   const newCardPlace = placeInput.value;
   const newCardLink = linkInput.value;
-  submitFormAddCard.textContent = messages.saving;
+  renameButtonTextSave(submitFormAddCard);
   postNewCard(newCardPlace, newCardLink);
 });
 
