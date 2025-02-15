@@ -2,13 +2,15 @@ import { baseSelectors } from "../constants";
 import { putLike, deleteLike, deleteCardFromServer } from "./api";
 import { closeModal } from "./modal";
 
-export function createCard(addCard, name, link, deleteCard, toggleLikeCard, openImageModal, isMyCard, likeCount, hasMyLike, cardId, openConfirmationPopup) {
+export function createCard(addCard, name, link, isMyCard, likeCount, hasMyLike, cardId, {openConfirmationPopup, toggleLikeCard, openImageModal, deleteCard}) {
   const newCard = addCard.querySelector(".places__item").cloneNode(true);
   newCard.id = cardId;
   const cardImg = newCard.querySelector('.card__image');
   cardImg.src = link;
   cardImg.alt = name;
-  cardImg.addEventListener('click',openImageModal);
+  if(openImageModal) {
+    cardImg.addEventListener('click',openImageModal);
+  }
 
   const cardTitle = newCard.querySelector('.card__title');
   cardTitle.textContent = name;
@@ -16,7 +18,9 @@ export function createCard(addCard, name, link, deleteCard, toggleLikeCard, open
   const deleteButton = newCard.querySelector('.card__delete-button');
   
   if(isMyCard) {
-    deleteButton.addEventListener('click', (evt) => openConfirmationPopup(evt, deleteCard, cardId));
+    if(deleteCard && openConfirmationPopup){
+      deleteButton.addEventListener('click', (evt) => openConfirmationPopup(evt, deleteCard, cardId))
+    };
   } else {
     deleteButton.remove();
   }
@@ -29,9 +33,9 @@ export function createCard(addCard, name, link, deleteCard, toggleLikeCard, open
   if(hasMyLike) {
     likeButton.classList.add("card__like-button_is-active");
   }
-
-  likeButton.addEventListener('click', (evt) => toggleLikeCard(evt, cardId, likeCountElement));
-  
+  if(toggleLikeCard) {
+    likeButton.addEventListener('click', (evt) => toggleLikeCard(evt, cardId, likeCountElement));
+  }
   return newCard;
 }
 

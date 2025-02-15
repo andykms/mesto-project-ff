@@ -50,7 +50,7 @@ function insertServerUserInfo(userInfoJson) {
 
 function insertServerCards(cards, myUserId) {
   cards.forEach((card)=>{
-      addNewCard(createCard(addCard, card.name, card.link, deleteCard, toggleLikeCard, openImageModal, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id, openConfirmationPopup));
+      addNewCard(createCard(addCard, card.name, card.link, checkMyAuthorship(myUserId, card.owner._id), card.likes.length, checkOnMyLike(myUserId, card.likes), card._id, {openConfirmationPopup, toggleLikeCard, openImageModal, deleteCard}));
     });
 }
 
@@ -135,7 +135,7 @@ function renameProfile(newName, newDescription) {
 function postNewCard(newCardPlace, newCardLink) {
   postCard(newCardPlace, newCardLink)
     .then((cardJson)=>{
-      const newCard = createCard(addCard, cardJson.name, cardJson.link, deleteCard, toggleLikeCard, openImageModal, true, cardJson.likes.length, false, cardJson._id, openConfirmationPopup);
+      const newCard = createCard(addCard, cardJson.name, cardJson.link, true, cardJson.likes.length, false, cardJson._id, {openConfirmationPopup, toggleLikeCard, openImageModal, deleteCard});
       addNewCard(newCard, 0);
       formAddCard.reset();
       clearValidation(formAddCard, selectorNames);
