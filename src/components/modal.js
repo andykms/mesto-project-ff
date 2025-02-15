@@ -29,12 +29,12 @@ export function addClassesOpen(modalWindow) {
 
 export function addListenersOpen(modalWindow) {
   document.addEventListener('keyup', checkCloseKeyup);
-  modalWindow.addEventListener('click', checkCloseClick);
+  modalWindow.addEventListener('mousedown', checkCloseClick);
 }
 
 export function removeListeners(modalWindow) {
   document.removeEventListener('keyup', checkCloseKeyup);
-  modalWindow.removeEventListener('click', checkCloseClick)
+  modalWindow.removeEventListener('mousedown', checkCloseClick)
 }
 
 function removeClassesClose(modalWindow) {
