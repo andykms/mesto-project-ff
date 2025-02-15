@@ -201,5 +201,6 @@ function addNewCard(newCard, index) {
 function openConfirmationPopup(evt, deleteCard, cardId) {
   popupDeleteCard.id = cardId;
   openModal(evt, popupDeleteCard);
+  
   popupDeleteCard.addEventListener('submit', deleteCard);
 }
